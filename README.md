@@ -61,12 +61,17 @@ Open the `server` and `client` in separate VSCode workspaces or open the combine
 
 ### Purpose
 
-2-5 sentences describing what the system does
+The system allows the users to organize their time and share their schedule with other users. It allows the user to arrange events or book appointments with zero effort. 
 
 ### Pages
 
-* Home: 1-3 sentences describing what the page displays and what a user can do
-* Shopping cart: ...
+* Login: user can log in by email and password
+* Signup: user can sign up 
+* Home: My Calendar, search for events/friends and links to other pages
+* My groups(Group Calendar, Chat )
+* Profile: View and change user details.
+* inbox: 
+* About us:
 
 ### Entity-Relationship (ER) Diagram
 

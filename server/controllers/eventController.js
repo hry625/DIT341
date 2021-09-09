@@ -12,4 +12,13 @@ router.post('/api/event', function(req, res, next){
 
 //update,delete,read
 
+router.get('/api/event', function(req, res, next){
+    var attribute = req.body;
+    //var calendarEvent = new CalendarEvent();
+    CalendarEvent.findOne(attribute, function(err, calendarEvent ){
+        if (err) { return next(err); }
+        res.status(201).json(calendarEvent);
+    });
+})
+
 module.exports = router;

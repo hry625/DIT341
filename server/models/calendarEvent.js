@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Invitee = require('./invitee');
+var InviteeSchema= require('./invitee').inviteeSchema;
 
 var calendarEventSchema = new Schema({
     description : { type: String },
     time : { type: Date },
     title : { type: String},
-    invitees : { type: [Invitee]}
+    invitees : { type: [InviteeSchema]}
     //Maybe status?
 });
 

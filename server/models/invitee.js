@@ -10,9 +10,9 @@ const INVITEESTATUS = {
 
 var inviteeSchema = new Schema({
     name : { type: String },
-    eventID : { type: String },
-    status : { type: String, enum:INVITEESTATUS},
+    status : { type: String,enum: INVITEESTATUS},
 });
+var inviteeModel= mongoose.model('invitee', inviteeSchema);
 
-module.exports = mongoose.model('invitee', calendarEventSchema);
+module.exports = {inviteeModel,inviteeSchema};
 

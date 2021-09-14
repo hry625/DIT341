@@ -6,6 +6,7 @@ var cors = require('cors');
 var history = require('connect-history-api-fallback');
 
 var eventController = require('./controllers/eventController');
+var inviteeController = require('./controllers/inviteeController');
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/eventDB';
@@ -38,6 +39,7 @@ app.get('/api', function(req, res) {
 });
 
 app.use(eventController);
+app.use(inviteeController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

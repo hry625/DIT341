@@ -6,7 +6,7 @@ var CalendarEvent = require('../models/calendarEvent');
 router.get('/api/events/:eventID/invitees',function(req,res,next){
     CalendarEvent.findById(req.params.eventID, function(err, calendarEvent ){
         if (err) { return next(err); }
-        res.status(201).json(calendarEvent);
+        res.status(201).json(calendarEvent.invitees);
     });
 });
 

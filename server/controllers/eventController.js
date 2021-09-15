@@ -42,4 +42,12 @@ router.get('/api/events/:eventID', function(req, res, next) {
     })
 })
 
+router.delete('/api/events/:eventID', function(req, res, next) {
+    var eventID = req.params.eventID;
+    CalendarEvent.findByIdAndRemove(eventID, function(err, calendarEvent) {
+        if (err) { return next(err); }
+        res.status(200).json({ 'message': 'Successfully deleted ' });
+    })
+})
+
 module.exports = router;

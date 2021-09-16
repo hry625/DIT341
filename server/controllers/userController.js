@@ -13,9 +13,9 @@ router.post('/api/users', function(req, res, next) {
 //update,delete,read
 
 router.get('/api/users', function(req, res, next) {
-    var attribute = req.body;
+    // var attribute = req.body;
     //var user = new user();
-    User.findOne(attribute, function(err, user) {
+    User.find(function(err, user) {
         if (err) { return next(err); }
         res.status(201).json(user);
     });

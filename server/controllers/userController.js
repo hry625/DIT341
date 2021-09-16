@@ -22,9 +22,7 @@ router.get('/api/users', function(req, res, next) {
 })
 
 router.delete('/api/users', function(req, res, next) {
-    var attribute = req.body;
-
-    User.deleteOne(attribute, function(err, user) {
+    User.remove({}, function(err, user) {
         if (err) { return next(err); }
         //var object = JSON.parse(attribute);
         res.status(200).json({ 'message': 'Successfully deleted ' });

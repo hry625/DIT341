@@ -45,12 +45,11 @@ router.get('/api/events', function(req, res, next) {
 
 //Delete Calendar event by attribute 
 router.delete('/api/events', function(req, res, next) {
-    var attribute = req.body;
 
-    CalendarEvent.deleteOne(attribute, function(err, calendarEvent) {
+    CalendarEvent.remove({}, function(err, calendarEvent) {
         if (err) { return next(err); }
         //var object = JSON.parse(attribute);
-        res.status(200).json({ 'message': 'Successfully deleted ' });
+        res.status(200).json({ 'message': 'Successfully deleted all events' });
         //Todo: How to display the event that was deleted
         //console.log(object)
         //res.status(201).json({'message': 'Successfully deleted ' + object[0] });
@@ -60,7 +59,7 @@ router.delete('/api/events', function(req, res, next) {
 //Find event by id
 router.get('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
-    CalendarEvent.findByID(eventID, function(err, calendarEvent) {
+    CalendarEvent.findById(eventID, function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
     })
@@ -78,7 +77,7 @@ router.delete('/api/events/:eventID', function(req, res, next) {
 
 router.put('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
-    CalendarEvent.findByIdAndUpdate(eventID, req.body, function(err, calendarEvent) {
+    CalendarEvent.findByIdAndUpdate(eventID, req.body, {new:true}, function(err, calendarEvent) {
             if (err) { return next(err); }
             res.status(201).json(calendarEvent);
         })
@@ -87,7 +86,7 @@ router.put('/api/events/:eventID', function(req, res, next) {
 
 router.patch('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
-    CalendarEvent.findByIdAndUpdate(eventID, req.body, function(err, calendarEvent) {
+    CalendarEvent.findByIdAndUpdate(eventID, req.body, {new:true},function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
     })

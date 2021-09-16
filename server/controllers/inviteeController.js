@@ -20,7 +20,7 @@ router.get('/api/events/:eventID/invitees', function(req, res, next) {
 
 router.post('/api/events/:eventID/invitees', function(req, res, next) {
     var invitee = new Invitee(req.body);
-    CalendarEvent.findByIdAndUpdate({ '_id': req.params.eventID }, { $push: { 'invitees': invitee } }, function(err, doc) {
+    CalendarEvent.findByIdAndUpdate({ '_id': req.params.eventID }, { $push: { 'invitees': invitee } },{new:true}, function(err, doc) {
         console.log('I am here');
         if (err) { return next(err); }
         res.status(201).json(doc);

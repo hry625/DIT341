@@ -20,10 +20,11 @@ router.get('/api/events', function(req, res, next) {
     });
 })
 
-//Find event with an attribute
+//Filtering events with time and title
 router.get('/api/events', function(req, res, next) {
-    var attribute = req.body;
-    CalendarEvent.findOne(attribute, function(err, calendarEvent) {
+    var eventTime = req.query.time;
+    var eventTitle = req.query.title.
+    CalendarEvent.find({eventTime, eventTitle}, function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
     });

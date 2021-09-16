@@ -34,7 +34,7 @@ router.delete('/api/users', function(req, res, next) {
 
 router.get('/api/users/:userID', function(req, res, next) {
     var userID = req.params.userID;
-    User.findByID(userID, function(err, user) {
+    User.findById(userID, function(err, user) {
         if (err) { return next(err); }
         res.status(201).json(user);
     })

@@ -25,7 +25,7 @@ router.delete('/api/users', function(req, res, next) {
     User.remove({}, function(err, user) {
         if (err) { return next(err); }
         //var object = JSON.parse(attribute);
-        res.status(200).json({ 'message': 'Successfully deleted ' });
+        res.status(201).json({ 'message': 'Successfully deleted all users' });
         //Todo: How to display the event that was deleted
         //console.log(object)
         //res.status(201).json({'message': 'Successfully deleted ' + object[0] });

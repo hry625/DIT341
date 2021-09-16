@@ -30,6 +30,19 @@ router.get('/api/events', function(req, res, next) {
     });
 })
 
+//sorting and pagination
+router.get('/api/events', function(req, res, next) {
+    var page = req.query.page;
+    var limit = req.query.limit;
+    var eventTitle = req.query.title;
+    var order = req.query.sort;
+    CalendarEvent.find(eventTitle).skip(page * limit ).limit(limit).sort(order).exec(
+        function(err, calendarEvent) {
+        if (err) { return next(err); }
+        res.status(201).json(calendarEvent);
+    });
+})
+
 //Delete Calendar event by attribute 
 router.delete('/api/events', function(req, res, next) {
     var attribute = req.body;

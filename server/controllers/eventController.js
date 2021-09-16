@@ -59,7 +59,7 @@ router.delete('/api/events', function(req, res, next) {
 //Find event by id
 router.get('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
-    CalendarEvent.findByID(eventID, function(err, calendarEvent) {
+    CalendarEvent.findById(eventID, function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
     })

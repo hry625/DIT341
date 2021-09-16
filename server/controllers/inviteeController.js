@@ -10,6 +10,14 @@ router.get('/api/events/:eventID/invitees', function(req, res, next) {
     });
 });
 
+router.get('/api/events/:eventID/invitees', function(req, res, next) {
+    var field = req.query.fields;
+    CalendarEvent.find(req.params.eventID, field, function(err, calendarEvent) {
+        if (err) { return next(err); }
+        res.status(201).json(calendarEvent.invitees);
+    });
+});
+
 router.post('/api/events/:eventID/invitees', function(req, res, next) {
     var invitee = new Invitee(req.body);
     CalendarEvent.findByIdAndUpdate({ '_id': req.params.eventID }, { $push: { 'invitees': invitee } }, function(err, doc) {

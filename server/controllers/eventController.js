@@ -77,7 +77,7 @@ router.delete('/api/events/:eventID', function(req, res, next) {
 
 router.put('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
-    CalendarEvent.findByIdAndUpdate(eventID, req.body, function(err, calendarEvent) {
+    CalendarEvent.findByIdAndUpdate(eventID, req.body, {new:true}, function(err, calendarEvent) {
             if (err) { return next(err); }
             res.status(201).json(calendarEvent);
         })
@@ -86,7 +86,7 @@ router.put('/api/events/:eventID', function(req, res, next) {
 
 router.patch('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
-    CalendarEvent.findByIdAndUpdate(eventID, req.body, function(err, calendarEvent) {
+    CalendarEvent.findByIdAndUpdate(eventID, req.body, {new:true},function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
     })

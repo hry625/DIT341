@@ -50,7 +50,7 @@ router.delete('/api/users/:userID', function(req, res, next) {
 
 router.put('/api/users/:userID', function(req, res, next) {
     var userID = req.params.userID;
-    User.findByIdAndUpdate(userID, req.body, function(err, user) {
+    User.findByIdAndUpdate(userID, req.body,{new:true}, function(err, user) {
             if (err) { return next(err); }
             res.status(201).json(user);
         })
@@ -59,7 +59,7 @@ router.put('/api/users/:userID', function(req, res, next) {
 // TODO: Check with TA about path variable and query should we implement two different endpoint or just one.
 router.patch('/api/users/:userID', function(req, res, next) {
     var userID = req.params.userID;
-    User.findByIdAndUpdate(userID, req.body, function(err, user) {
+    User.findByIdAndUpdate(userID, req.body,{new:true}, function(err, user) {
         if (err) { return next(err); }
         res.status(201).json(user);
     })

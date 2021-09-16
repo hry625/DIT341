@@ -1,7 +1,9 @@
 var express = require('express');
+const calendarEvent = require('../models/calendarEvent');
 var router = express.Router();
 var CalendarEvent = require('../models/calendarEvent');
 
+//Create new calendar event
 router.post('/api/events', function(req, res, next) {
     var calendarEvent = new CalendarEvent(req.body);
     calendarEvent.save(function(err, calendarEvent) {
@@ -10,17 +12,24 @@ router.post('/api/events', function(req, res, next) {
     })
 });
 
-//update,delete,read
+//Find all events
+router.get('/api/events', function(req, res, next) {
+    CalendarEvent.find( function(err, calendarEvent) {
+        if (err) { return next(err); }
+        res.status(201).json(calendarEvent);
+    });
+})
 
+//Find event with an attribute
 router.get('/api/events', function(req, res, next) {
     var attribute = req.body;
-    //var calendarEvent = new CalendarEvent();
     CalendarEvent.findOne(attribute, function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
     });
 })
 
+//Delete Calendar event by attribute 
 router.delete('/api/events', function(req, res, next) {
     var attribute = req.body;
 
@@ -34,6 +43,7 @@ router.delete('/api/events', function(req, res, next) {
     })
 })
 
+//Find event by id
 router.get('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
     CalendarEvent.findByID(eventID, function(err, calendarEvent) {
@@ -42,6 +52,7 @@ router.get('/api/events/:eventID', function(req, res, next) {
     })
 })
 
+//Delete event by id
 router.delete('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
     CalendarEvent.findByIdAndRemove(eventID, function(err, calendarEvent) {
@@ -49,6 +60,7 @@ router.delete('/api/events/:eventID', function(req, res, next) {
         res.status(200).json({ 'message': 'Successfully deleted ' });
     })
 })
+
 
 router.put('/api/events/:eventID', function(req, res, next) {
     var eventID = req.params.eventID;
@@ -66,7 +78,5 @@ router.patch('/api/events/:eventID', function(req, res, next) {
         res.status(201).json(calendarEvent);
     })
 })
-
-
 
 module.exports = router;

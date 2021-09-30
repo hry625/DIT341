@@ -35,21 +35,23 @@
 
     <v-main>
       <HelloWorld />
-      <Calendar />
+      <Login />
     </v-main>
   </v-app>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
-import Calendar from './components/SharedCalendar'
+import Login from './components/LoginTest.vue'
+// import Calendar from './components/SharedCalendar'
 
 export default {
   name: 'App',
 
   components: {
     HelloWorld,
-    Calendar
+    Login
+    // Calendar
   },
 
   data: () => ({

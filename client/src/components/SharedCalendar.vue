@@ -65,8 +65,9 @@
             <v-toolbar :color="selectedEvent.color" dark>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn @click="updateEvent(selectedEvent._id)">
-                <v-icon>mdi-pencil</v-icon>
+              <v-btn>
+                <!--<v-icon>mdi-pencil @click=</v-icon>-->
+                <EditEventPopup />
               </v-btn>
               <v-btn icon @click="deleteEvent(selectedEvent._id)">
                 <!--TODO: Make sure the card closes itself after deletion is complete-->
@@ -90,8 +91,10 @@
 </template>
 
 <script>
+import EditEventPopup from './editEventPopup.vue'
 import { Api } from '@/Api'
 export default {
+  components: { EditEventPopup },
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),

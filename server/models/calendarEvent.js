@@ -7,6 +7,7 @@ var calendarEventSchema = new Schema({
     start : { type: String },
     end : { type: String },
     name : { type: String},
+    color : { type: String},
     invitees : { type: [InviteeSchema]}
     //Maybe status?
 });

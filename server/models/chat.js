@@ -7,4 +7,4 @@ var chatSchema = new Schema({
     timeStamp: Date
 })
 
-ports = mongoose.model('chat', chatSchema);
+module.exports = mongoose.model('chat', chatSchema);

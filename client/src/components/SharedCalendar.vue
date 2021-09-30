@@ -122,17 +122,56 @@ export default {
 
   methods: {
     async getEvents() {
-      Api.get('/events').then(response => {
-        console.log(response.data)
-        this.events = response.data
-      }).catch(error => {
-        this.camels = []
-        console.log(error)
-        //   TODO: display some error message instead of logging to console
-      }).then(() => {
-        console.log('This runs every time after success or error.')
-        console.log(this.events)
-      })
+      Api.get('/events')
+        .then((response) => {
+          console.log(response.data)
+          this.events = response.data
+        })
+        .catch((error) => {
+          this.camels = []
+          console.log(error)
+          //   TODO: display some error message instead of logging to console
+        })
+        .then(() => {
+          console.log('This runs every time after success or error.')
+          console.log(this.events)
+        })
+      // TODO: add a method to get colour and edit the calendarEvent schema to allow user to choose a colour.
+    },
+    viewDay({ date }) {
+      this.focus = date
+      this.type = 'day'
+    },
+    setToday() {
+      this.focus = ''
+    },
+    prev() {
+      this.$refs.calendar.prev()
+    },
+    next() {
+      this.$refs.calendar.next()
+    },
+    showEvent({ nativeEvent, event }) {
+      const open = () => {
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => (this.selectedOpen = true))
+        )
+      }
+
+      if (this.selectedOpen) {
+        this.selectedOpen = false
+        requestAnimationFrame(() => requestAnimationFrame(() => open()))
+      } else {
+        open()
+      }
+      nativeEvent.stopPropagation()
+    },
+    updateRange({ start, end }) {
+    },
+    rnd(a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a
     }
   }
 }
@@ -234,5 +273,4 @@ export default {
 //     }
 //   }
 // }
-
 </script>

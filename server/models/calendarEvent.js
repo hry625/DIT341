@@ -9,5 +9,6 @@ var calendarEventSchema = new Schema({
     invitees : { type: [InviteeSchema]}
     //Maybe status?
 });
+var calendarEventModel= mongoose.model('calendarEvent', calendarEventSchema);
 
-module.exports = mongoose.model('calendarEvent', calendarEventSchema);
+module.exports = {calendarEventSchema,calendarEventModel};

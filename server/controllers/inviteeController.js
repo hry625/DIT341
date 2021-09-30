@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Invitee = require('../models/invitee').inviteeModel;
-var CalendarEvent = require('../models/calendarEvent');
+var CalendarEvent = require('../models/calendarEvent').calendarEventModel;
 // get--done
 router.get('/api/events/:eventID/invitees', function(req, res, next) {
     if(req.query.fields!= null){

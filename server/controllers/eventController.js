@@ -1,7 +1,7 @@
 var express = require('express');
-const calendarEvent = require('../models/calendarEvent');
+// const calendarEvent = require('../models/calendarEvent');
 var router = express.Router();
-var CalendarEvent = require('../models/calendarEvent');
+var CalendarEvent = require('../models/calendarEvent').calendarEventModel;
 
 //Create new calendar event
 router.post('/api/events', function(req, res, next) {

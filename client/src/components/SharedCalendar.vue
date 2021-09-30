@@ -65,11 +65,11 @@
             <v-toolbar :color="selectedEvent.color" dark>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn>
+              <v-btn @click="updateEvent(selectedEvent._id)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
               <v-btn icon @click="deleteEvent(selectedEvent._id)">
-                // TODO: Make sure the card closes itself after deletion is complete
+                <!--TODO: Make sure the card closes itself after deletion is complete-->
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-toolbar>
@@ -136,6 +136,9 @@ export default {
           console.log(this.events)
         })
       // TODO: add a method to get colour and edit the calendarEvent schema to allow user to choose a colour.
+    },
+    updateEvent(eventId) {
+      console.log('Update event')
     },
     async deleteEvent(eventId) {
       console.log('Delete event with id' + eventId)

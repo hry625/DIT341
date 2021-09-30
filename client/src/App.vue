@@ -35,7 +35,7 @@
 
     <v-main>
       <HelloWorld />
-      <Calender />
+      <Calendar />
     </v-main>
   </v-app>
 </template>

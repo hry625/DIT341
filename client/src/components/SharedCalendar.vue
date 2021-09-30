@@ -69,6 +69,7 @@
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
               <v-btn icon @click="deleteEvent(selectedEvent._id)">
+                // TODO: Make sure the card closes itself after deletion is complete
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-toolbar>

@@ -1,151 +1,96 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="hello">
+    <h1>{{ msg }}</h1>
+    <p class="lead mt-2">{{ authStatus }}</p>
+    <div class="d-flex my-4 justify-content-center">
+      <button @click="signIn" class="btn btn-outline-primary mx-4">
+        Sign In >
+      </button>
+      <button @click="sendRequest" class="btn btn-outline-success mx-4">
+        Send Request >
+      </button>
+      <button @click="signOut" class="btn btn-outline-danger mx-4">
+        Sign Out >
+      </button>
+    </div>
+    <p class="lead">{{ response }}</p>
+  </div>
 </template>
 
 <script>
+import { Api } from '@/Api'
+import firebase from 'firebase'
+
 export default {
   name: 'HelloWorld',
-
-  data: () => ({
-    ecosystem: [
-      {
-        text: 'vuetify-loader',
-        href: 'https://github.com/vuetifyjs/vuetify-loader'
-      },
-      {
-        text: 'github',
-        href: 'https://github.com/vuetifyjs/vuetify'
-      },
-      {
-        text: 'awesome-vuetify',
-        href: 'https://github.com/vuetifyjs/awesome-vuetify'
+  data: function () {
+    return {
+      response: 'No data yet...',
+      authStatus: 'No Auth Status'
+    }
+  },
+  props: {
+    msg: String
+  },
+  methods: {
+    sendRequest() {
+      if (firebase.auth().currentUser) {
+        firebase
+          .auth()
+          .currentUser.getIdToken(true)
+          .then((idToken) => {
+            Api({
+              method: 'get',
+              url: '/auth',
+              headers: {
+                AuthToken: idToken
+              }
+            })
+              .then((res) => {
+                this.response = res.data.message
+              })
+              .catch((error) => {
+                this.response = error
+              })
+          })
+          .catch((error) => {
+            this.response = 'Error getting auth token'
+          })
+      } else {
+        Api({
+          method: 'get',
+          url: '/auth'
+        })
+          .then((res) => {
+            this.response = res.data.message
+          })
+          .catch((error) => {
+            this.response = error
+          })
       }
-    ],
-    importantLinks: [
-      {
-        text: 'Documentation',
-        href: 'https://vuetifyjs.com'
-      },
-      {
-        text: 'Chat',
-        href: 'https://community.vuetifyjs.com'
-      },
-      {
-        text: 'Made with Vuetify',
-        href: 'https://madewithvuejs.com/vuetify'
-      },
-      {
-        text: 'Twitter',
-        href: 'https://twitter.com/vuetifyjs'
-      },
-      {
-        text: 'Articles',
-        href: 'https://medium.com/vuetify'
-      }
-    ],
-    whatsNext: [
-      {
-        text: 'Explore components',
-        href: 'https://vuetifyjs.com/components/api-explorer'
-      },
-      {
-        text: 'Select a layout',
-        href: 'https://vuetifyjs.com/getting-started/pre-made-layouts'
-      },
-      {
-        text: 'Frequently Asked Questions',
-        href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions'
-      }
-    ]
-  })
+    },
+    signIn() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword('dummy@gmail.com', 'pass123!')
+        .then(() => {
+          this.authStatus = 'Authorized'
+        })
+        .catch((err) => {
+          this.authStatus = err
+        })
+    },
+    signOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.authStatus = 'Unauthorized'
+        })
+        .catch((err) => {
+          this.authStatus = err
+        })
+    }
+  }
 }
 </script>

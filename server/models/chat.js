@@ -6,5 +6,6 @@ var chatSchema = new Schema({
     content : String,
     timeStamp: Date
 })
+var chatModel = mongoose.model('chat', chatSchema);
 
-module.exports = mongoose.model('chat', chatSchema);
+module.exports = {chatSchema, chatModel};

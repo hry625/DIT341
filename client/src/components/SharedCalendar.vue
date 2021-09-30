@@ -68,7 +68,7 @@
               <v-btn>
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn icon @click="deleteEvent(selectedEvent.id)">
+              <v-btn icon @click="deleteEvent(selectedEvent._id)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-toolbar>
@@ -135,6 +135,14 @@ export default {
           console.log(this.events)
         })
       // TODO: add a method to get colour and edit the calendarEvent schema to allow user to choose a colour.
+    },
+    async deleteEvent(eventId) {
+      console.log('Delete event with id' + eventId)
+      Api.delete(`/events/${eventId}`)
+        .then(response => {
+          const index = this.events.findIndex(event => event._id === eventId)
+          this.events.splice(index, 1)
+        })
     },
     viewDay({ date }) {
       this.focus = date

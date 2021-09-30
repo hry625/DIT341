@@ -18,39 +18,41 @@
 									"var jsonData = JSON.parse(responseBody);\r",
 									"postman.setEnvironmentVariable(\"eventID1\", jsonData._id);\r",
 									"\r",
-									"pm.test('status code is 201', function(){\r",
+									"pm.test('status code is 201', function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"    pm.response.to.have.status(\"Created\");\r",
 									"\r",
 									"})\r",
-									"pm.test('Response should be JSON', function(){\r",
+									"pm.test('Response should be JSON', function () {\r",
 									"    pm.response.to.be.json;\r",
 									"    //also checks if there is a body\r",
 									"    pm.response.to.not.be.error;\r",
 									"})\r",
 									"\r",
-									"pm.test('Correct JSON schema', function(){\r",
+									"pm.test('Correct JSON schema', function () {\r",
 									"    const schema = {\r",
-									"        \"properties\": {\r",
-									"            \"description\" : { \"type\": \"string\" },\r",
-									"            \"time\" : { \"type\": \"string\" },\r",
-									"            \"title\" : { \"type\": \"string\"},\r",
-									"            \"invitees\" : { \"type\": \"array\"}\r",
+									"     \"properties\": {\r",
+									"            \"details\": { \"type\": \"string\" },\r",
+									"            \"start\": { \"type\": \"string\" },\r",
+									"            \"end\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"color\": { \"type\": \"string\" },\r",
+									"            \"invitees\": { \"type\": \"array\" }\r",
 									"        }\r",
-									"       \r",
+									"\r",
 									"    }\r",
 									"    pm.response.to.have.jsonSchema(schema);\r",
 									"\r",
 									"})\r",
 									"\r",
-									"pm.test('Json has correct data', function(){\r",
+									"pm.test('Json has correct data', function () {\r",
 									"    const responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.be.an(\"object\");\r",
-									"    pm.expect(responseJson.title).to.be.a(\"string\");\r",
-									"    pm.expect(responseJson.description).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.name).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.details).to.be.a(\"string\");\r",
 									"    pm.expect(responseJson.invitees).to.be.an(\"array\");\r",
 									"    //How do you assert time and id? \r",
-									"    \r",
+									"\r",
 									"    //pm.expect(responseJson.title).to.eql('Event');\r",
 									"    //pm.expect(responseJson.description).to.eql('description');\r",
 									"\r",
@@ -76,7 +78,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\" : \"description\",\r\n    \"time\" : \"2014-01-01T23:28:56.782Z\",\r\n    \"title\" : \"Event 1\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
+							"raw": "{\r\n    \"details\" : \"details\",\r\n    \"start\" : \"2021-09-12 16:00\",\r\n    \"end\" : \"2021-09-12 18:00\",\r\n    \"name\" : \"event 1\",\r\n    \"color\" : \"#089933\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/events",
@@ -99,41 +101,43 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"eventID2\", jsonData._id);\r",
+									"postman.setEnvironmentVariable(\"eventID1\", jsonData._id);\r",
 									"\r",
-									"pm.test('status code is 201', function(){\r",
+									"pm.test('status code is 201', function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"    pm.response.to.have.status(\"Created\");\r",
 									"\r",
 									"})\r",
-									"pm.test('Response should be JSON', function(){\r",
+									"pm.test('Response should be JSON', function () {\r",
 									"    pm.response.to.be.json;\r",
 									"    //also checks if there is a body\r",
 									"    pm.response.to.not.be.error;\r",
 									"})\r",
 									"\r",
-									"pm.test('Correct JSON schema', function(){\r",
+									"pm.test('Correct JSON schema', function () {\r",
 									"    const schema = {\r",
-									"        \"properties\": {\r",
-									"            \"description\" : { \"type\": \"string\" },\r",
-									"            \"time\" : { \"type\": \"string\" },\r",
-									"            \"title\" : { \"type\": \"string\"},\r",
-									"            \"invitees\" : { \"type\": \"array\"}\r",
+									"     \"properties\": {\r",
+									"            \"details\": { \"type\": \"string\" },\r",
+									"            \"start\": { \"type\": \"string\" },\r",
+									"            \"end\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"color\": { \"type\": \"string\" },\r",
+									"            \"invitees\": { \"type\": \"array\" }\r",
 									"        }\r",
-									"       \r",
+									"\r",
 									"    }\r",
 									"    pm.response.to.have.jsonSchema(schema);\r",
 									"\r",
 									"})\r",
 									"\r",
-									"pm.test('Json has correct data', function(){\r",
+									"pm.test('Json has correct data', function () {\r",
 									"    const responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.be.an(\"object\");\r",
-									"    pm.expect(responseJson.title).to.be.a(\"string\");\r",
-									"    pm.expect(responseJson.description).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.name).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.details).to.be.a(\"string\");\r",
 									"    pm.expect(responseJson.invitees).to.be.an(\"array\");\r",
 									"    //How do you assert time and id? \r",
-									"    \r",
+									"\r",
 									"    //pm.expect(responseJson.title).to.eql('Event');\r",
 									"    //pm.expect(responseJson.description).to.eql('description');\r",
 									"\r",
@@ -159,7 +163,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\" : \"description\",\r\n    \"time\" : \"2014-01-01T23:28:56.782Z\",\r\n    \"title\" : \"Second Event\",\r\n    \"invitees\" : [{\"name\" : \"Jane\" , \"status\" : \"accepted\"}]\r\n\r\n}"
+							"raw": "{\r\n    \"details\" : \"details\",\r\n    \"start\" : \"2021-09-12 16:00\",\r\n    \"end\" : \"2021-09-12 18:00\",\r\n    \"name\" : \"event 2\",\r\n    \"color\": \"#089933\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/events",
@@ -181,16 +185,28 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"eventID2\", jsonData._id);\r",
+									"\r",
 									"pm.test('status code is 201', function(){\r",
 									"    pm.response.to.have.status(201);\r",
 									"    pm.response.to.have.status(\"Created\");\r",
 									"\r",
-									"})"
+									"})\r",
+									"pm.test('Response should be JSON', function(){\r",
+									"    pm.response.to.be.json;\r",
+									"    //also checks if there is a body\r",
+									"    pm.response.to.not.be.error;\r",
+									"})\r",
+									""
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -205,6 +221,10 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{host}}/api/events",
 							"host": [
@@ -231,11 +251,13 @@
 									"\r",
 									"pm.test('Correct JSON schema', function(){\r",
 									"    const schema = {\r",
-									"        \"properties\": {\r",
-									"            \"description\" : { \"type\": \"string\" },\r",
-									"            \"time\" : { \"type\": \"string\" },\r",
-									"            \"title\" : { \"type\": \"string\"},\r",
-									"            \"invitees\" : { \"type\": \"array\"}\r",
+									"     \"properties\": {\r",
+									"            \"details\": { \"type\": \"string\" },\r",
+									"            \"start\": { \"type\": \"string\" },\r",
+									"            \"end\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"color\": { \"type\": \"string\" },\r",
+									"            \"invitees\": { \"type\": \"array\" }\r",
 									"        }\r",
 									"       \r",
 									"    }\r",
@@ -290,6 +312,21 @@
 				},
 				{
 					"name": "Put a new event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -324,6 +361,21 @@
 				},
 				{
 					"name": "Update an event by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -476,28 +528,30 @@
 									"    pm.response.to.not.be.error;\r",
 									"})\r",
 									"\r",
-									"pm.test('Correct JSON schema', function(){\r",
+									"pm.test('Correct JSON schema', function () {\r",
 									"    const schema = {\r",
 									"        \"properties\": {\r",
-									"            \"description\" : { \"type\": \"string\" },\r",
-									"            \"time\" : { \"type\": \"string\" },\r",
-									"            \"title\" : { \"type\": \"string\"},\r",
-									"            \"invitees\" : { \"type\": \"array\"}\r",
+									"            \"details\": { \"type\": \"string\" },\r",
+									"            \"start\": { \"type\": \"string\" },\r",
+									"            \"end\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"color\": { \"type\": \"string\" },\r",
+									"            \"invitees\": { \"type\": \"array\" }\r",
 									"        }\r",
-									"       \r",
+									"\r",
 									"    }\r",
 									"    pm.response.to.have.jsonSchema(schema);\r",
 									"\r",
 									"})\r",
 									"\r",
-									"pm.test('Json has correct data', function(){\r",
+									"pm.test('Json has correct data', function () {\r",
 									"    const responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.be.an(\"object\");\r",
-									"    pm.expect(responseJson.title).to.be.a(\"string\");\r",
-									"    pm.expect(responseJson.description).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.name).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.details).to.be.a(\"string\");\r",
 									"    pm.expect(responseJson.invitees).to.be.an(\"array\");\r",
 									"    //How do you assert time and id? \r",
-									"    \r",
+									"\r",
 									"    //pm.expect(responseJson.title).to.eql('Event');\r",
 									"    //pm.expect(responseJson.description).to.eql('description');\r",
 									"\r",
@@ -523,7 +577,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\" : \"description\",\r\n    \"time\" : \"2014-01-01T23:28:56.782Z\",\r\n    \"title\" : \"Event 1\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
+							"raw": "{\r\n    \"details\" : \"details\",\r\n    \"start\" : \"2021-09-12 16:00\",\r\n    \"end\" : \"2021-09-12 18:00\",\r\n    \"name\" : \"event 1\",\r\n    \"color\": \"#089933\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/events",
@@ -559,28 +613,30 @@
 									"    pm.response.to.not.be.error;\r",
 									"})\r",
 									"\r",
-									"pm.test('Correct JSON schema', function(){\r",
+									"pm.test('Correct JSON schema', function () {\r",
 									"    const schema = {\r",
 									"        \"properties\": {\r",
-									"            \"description\" : { \"type\": \"string\" },\r",
-									"            \"time\" : { \"type\": \"string\" },\r",
-									"            \"title\" : { \"type\": \"string\"},\r",
-									"            \"invitees\" : { \"type\": \"array\"}\r",
+									"            \"details\": { \"type\": \"string\" },\r",
+									"            \"start\": { \"type\": \"string\" },\r",
+									"            \"end\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"color\": { \"type\": \"string\" },\r",
+									"            \"invitees\": { \"type\": \"array\" }\r",
 									"        }\r",
-									"       \r",
+									"\r",
 									"    }\r",
 									"    pm.response.to.have.jsonSchema(schema);\r",
 									"\r",
 									"})\r",
 									"\r",
-									"pm.test('Json has correct data', function(){\r",
+									"pm.test('Json has correct data', function () {\r",
 									"    const responseJson = pm.response.json();\r",
 									"    pm.expect(responseJson).to.be.an(\"object\");\r",
-									"    pm.expect(responseJson.title).to.be.a(\"string\");\r",
-									"    pm.expect(responseJson.description).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.name).to.be.a(\"string\");\r",
+									"    pm.expect(responseJson.details).to.be.a(\"string\");\r",
 									"    pm.expect(responseJson.invitees).to.be.an(\"array\");\r",
 									"    //How do you assert time and id? \r",
-									"    \r",
+									"\r",
 									"    //pm.expect(responseJson.title).to.eql('Event');\r",
 									"    //pm.expect(responseJson.description).to.eql('description');\r",
 									"\r",
@@ -606,7 +662,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\" : \"description\",\r\n    \"time\" : \"2014-01-01T23:28:56.782Z\",\r\n    \"title\" : \"Second Event\",\r\n    \"invitees\" : [{\"name\" : \"Jane\" , \"status\" : \"accepted\"}]\r\n\r\n}"
+							"raw": "{\r\n    \"details\" : \"details\",\r\n    \"start\" : \"2021-09-12 16:00\",\r\n    \"end\" : \"2021-09-12 18:00\",\r\n    \"name\" : \"event 2\",\r\n    \"color\": \"#089933\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
 						},
 						"url": {
 							"raw": "{{host}}/api/events",
@@ -616,6 +672,68 @@
 							"path": [
 								"api",
 								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pagination with sorting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/events?page=0&limit=5&title=\"event\"&order=\"time\"",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "title",
+									"value": "\"event\""
+								},
+								{
+									"key": "order",
+									"value": "\"time\""
+								}
 							]
 						}
 					},
@@ -1057,7 +1175,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"name\" : \"Luke\" , \"status\" : \"invited\"}",
+							"raw": "{\"name\" : \"James\" , \"status\" : \"invited\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1092,9 +1210,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('status code is 201', function(){\r",
-									"    pm.response.to.have.status(201);\r",
-									"})"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -1105,18 +1221,7 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -1166,7 +1271,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/events/:eventID/invitees",
+							"raw": "{{host}}/api/events/:eventID/invitees/?fields=title",
 							"host": [
 								"{{host}}"
 							],
@@ -1174,7 +1279,14 @@
 								"api",
 								"events",
 								":eventID",
-								"invitees"
+								"invitees",
+								""
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "title"
+								}
 							],
 							"variable": [
 								{

@@ -3,9 +3,11 @@ var Schema = mongoose.Schema;
 var InviteeSchema= require('./invitee').inviteeSchema;
 
 var calendarEventSchema = new Schema({
-    description : { type: String },
-    time : { type: Date },
-    title : { type: String},
+    details : { type: String },
+    start : { type: String },
+    end : { type: String },
+    name : { type: String},
+    color : { type: String},
     invitees : { type: [InviteeSchema]}
     //Maybe status?
 });

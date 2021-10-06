@@ -57,12 +57,22 @@
               <v-text-field
                 v-model="start"
                 type="date"
-                label="start (required)"
+                label="start date (required)"
               ></v-text-field>
               <v-text-field
                 v-model="end"
                 type="date"
-                label="end (required)"
+                label="end date (required)"
+              ></v-text-field>
+              <v-text-field
+                v-model="startTime"
+                type="time"
+                label="start time"
+              ></v-text-field>
+              <v-text-field
+                v-model="endTime"
+                type="time"
+                label="end time"
               ></v-text-field>
               <v-text-field
                 v-model="color"
@@ -212,6 +222,8 @@ export default {
       '4day': '4 Days'
     },
     name: null,
+    startTime: null,
+    endTime: null,
     details: null,
     start: null,
     end: null,
@@ -298,11 +310,11 @@ export default {
       this.$refs.calendar.next()
     },
     async addEvent() {
-      if (this.name && this.start && this.end) {
+      if (this.name && this.start && this.end && this.startTime && this.endTime) {
         const event = {
           name: this.name,
-          start: this.start,
-          end: this.end,
+          start: this.start + ' ' + this.startTime,
+          end: this.end + ' ' + this.endTime,
           details: this.details,
           color: this.color
         }
@@ -319,7 +331,7 @@ export default {
         this.start = ''
         this.end = ''
       } else {
-        alert('You must enter event name, start, and end time')
+        alert('You must enter event name, start/end date , and start/end time')
       }
     },
     editEvent(ev) {

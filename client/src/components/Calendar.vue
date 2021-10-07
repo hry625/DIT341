@@ -57,18 +57,29 @@
               <v-text-field
                 v-model="start"
                 type="date"
-                label="start (required)"
+                label="start date (required)"
               ></v-text-field>
               <v-text-field
                 v-model="end"
                 type="date"
-                label="end (required)"
+                label="end date (required)"
+              ></v-text-field>
+              <v-text-field
+                v-model="startTime"
+                type="time"
+                label="start time"
+              ></v-text-field>
+              <v-text-field
+                v-model="endTime"
+                type="time"
+                label="end time"
               ></v-text-field>
               <v-text-field
                 v-model="color"
                 type="color"
                 label="color (click to open color menu)"
               ></v-text-field>
+              <!-- TODO: add invitees here -->
               <v-btn
                 type="submit"
                 color="primary"
@@ -81,49 +92,6 @@
           </v-container>
         </v-card>
       </v-dialog>
-
-      <v-dialog v-model="dialogDate" max-width="500">
-        <v-card>
-          <v-container>
-            <v-form @submit.prevent="addEvent">
-              <v-text-field
-                v-model="name"
-                type="text"
-                label="event name (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="details"
-                type="text"
-                label="detail"
-              ></v-text-field>
-              <v-text-field
-                v-model="start"
-                type="date"
-                label="start (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="end"
-                type="date"
-                label="end (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="color"
-                type="color"
-                label="color (click to open color menu)"
-              ></v-text-field>
-              <v-btn
-                type="submit"
-                color="primary"
-                class="mr-4"
-                @click.stop="dialog = false"
-              >
-                create event
-              </v-btn>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
-
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
@@ -136,14 +104,14 @@
           :type="type"
           @click:event="showEvent"
           @click:more="viewDay"
-          @click:date="setDialogDate"
+          @click:date="setDialog"
           @change="updateRange"
         ></v-calendar>
+        <!--when pressing on an event -->
         <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
           :activator="selectedElement"
-          full-width
           offset-x
         >
           <v-card color="grey lighten-4" :width="350" flat>
@@ -178,21 +146,45 @@
               <v-btn
                 v-if="currentlyEditing !== selectedEvent.id"
                 text
-                @click.prevent="editEvent(selectedEvent)"
+                @click="editDialog = true"
               >
                 edit
-              </v-btn>
-              <v-btn
-                text
-                v-else
-                type="submit"
-                @click.prevent="updateEvent(selectedEvent)"
-              >
-                Save
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
+        <v-dialog v-model="editDialog" max-width="500">
+        <v-card>
+          <v-container>
+            <v-form @submit.prevent="updateEvent(selectedEvent)">
+              <v-text-field
+                v-model="selectedEvent.name"
+                type="text"
+                label="event name (required)"
+              ></v-text-field>
+              <v-text-field
+                v-model="selectedEvent.details"
+                type="text"
+                label="details"
+              ></v-text-field>
+              <v-text-field
+                v-model="selectedEvent.color"
+                type="color"
+                label="color (click to open color menu)"
+              ></v-text-field>
+              <!-- TODO: add invitees here -->
+              <v-btn
+                type="submit"
+                color="primary"
+                class="mr-4"
+                @click.stop="editDialog = false"
+              >
+                save
+              </v-btn>
+            </v-form>
+          </v-container>
+        </v-card>
+      </v-dialog>
       </v-sheet>
     </v-col>
   </v-row>
@@ -212,6 +204,8 @@ export default {
       '4day': '4 Days'
     },
     name: null,
+    startTime: null,
+    endTime: null,
     details: null,
     start: null,
     end: null,
@@ -222,7 +216,7 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
-    dialogDate: false
+    editDialog: false
   }),
   mounted() {
     this.getEvents()
@@ -277,8 +271,8 @@ export default {
         })
       // TODO: add a
     },
-    setDialogDate({ date }) {
-      this.dialogDate = true
+    setDialog({ date }) {
+      this.dialog = true
       this.focus = date
     },
     viewDay({ date }) {
@@ -298,11 +292,11 @@ export default {
       this.$refs.calendar.next()
     },
     async addEvent() {
-      if (this.name && this.start && this.end) {
+      if (this.name && this.start && this.end && this.startTime && this.endTime) {
         const event = {
           name: this.name,
-          start: this.start,
-          end: this.end,
+          start: this.start + ' ' + this.startTime,
+          end: this.end + ' ' + this.endTime,
           details: this.details,
           color: this.color
         }
@@ -319,7 +313,7 @@ export default {
         this.start = ''
         this.end = ''
       } else {
-        alert('You must enter event name, start, and end time')
+        alert('You must enter event name, start/end date , and start/end time')
       }
     },
     editEvent(ev) {
@@ -327,6 +321,13 @@ export default {
     },
     async updateEvent(ev) {
       // TODO: patch event
+      const updatedEvent = {
+        name: ev.name,
+        details: ev.details,
+        color: ev.color
+      }
+      console.log(updatedEvent)
+      Api.patch(`/events/${ev._id}`, updatedEvent)
       this.selectedOpen = false
       this.currentlyEditing = null
     },

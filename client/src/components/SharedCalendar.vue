@@ -1,4 +1,5 @@
  <!--based on sample code at https://github.com/vuetifyjs/vuetify/blob/master/packages/docs/src/examples/v-calendar/event-click.vue-->
+ <!-- !! NOT USED!! -->
 <template>
   <v-row class="fill-height">
     <v-col>

@@ -79,6 +79,7 @@
                 type="color"
                 label="color (click to open color menu)"
               ></v-text-field>
+              <!-- TODO: add invitees here -->
               <v-btn
                 type="submit"
                 color="primary"
@@ -91,49 +92,6 @@
           </v-container>
         </v-card>
       </v-dialog>
-
-      <v-dialog v-model="dialogDate" max-width="500">
-        <v-card>
-          <v-container>
-            <v-form @submit.prevent="addEvent">
-              <v-text-field
-                v-model="name"
-                type="text"
-                label="event name (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="details"
-                type="text"
-                label="detail"
-              ></v-text-field>
-              <v-text-field
-                v-model="start"
-                type="date"
-                label="start (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="end"
-                type="date"
-                label="end (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="color"
-                type="color"
-                label="color (click to open color menu)"
-              ></v-text-field>
-              <v-btn
-                type="submit"
-                color="primary"
-                class="mr-4"
-                @click.stop="dialog = false"
-              >
-                create event
-              </v-btn>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
-
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
@@ -146,9 +104,10 @@
           :type="type"
           @click:event="showEvent"
           @click:more="viewDay"
-          @click:date="setDialogDate"
+          @click:date="setDialog"
           @change="updateRange"
         ></v-calendar>
+        <!--when pressing on an event -->
         <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
@@ -233,8 +192,7 @@ export default {
     selectedElement: null,
     selectedOpen: false,
     events: [],
-    dialog: false,
-    dialogDate: false
+    dialog: false
   }),
   mounted() {
     this.getEvents()
@@ -289,8 +247,8 @@ export default {
         })
       // TODO: add a
     },
-    setDialogDate({ date }) {
-      this.dialogDate = true
+    setDialog({ date }) {
+      this.dialog = true
       this.focus = date
     },
     viewDay({ date }) {
@@ -339,6 +297,7 @@ export default {
     },
     async updateEvent(ev) {
       // TODO: patch event
+      Api.patch('/events')
       this.selectedOpen = false
       this.currentlyEditing = null
     },

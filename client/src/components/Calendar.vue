@@ -112,7 +112,6 @@
           v-model="selectedOpen"
           :close-on-content-click="false"
           :activator="selectedElement"
-          full-width
           offset-x
         >
           <v-card color="grey lighten-4" :width="350" flat>
@@ -147,21 +146,45 @@
               <v-btn
                 v-if="currentlyEditing !== selectedEvent.id"
                 text
-                @click.prevent="editEvent(selectedEvent)"
+                @click="editDialog = true"
               >
                 edit
-              </v-btn>
-              <v-btn
-                text
-                v-else
-                type="submit"
-                @click.prevent="updateEvent(selectedEvent)"
-              >
-                Save
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
+        <v-dialog v-model="editDialog" max-width="500">
+        <v-card>
+          <v-container>
+            <v-form @submit.prevent="updateEvent(selectedEvent)">
+              <v-text-field
+                v-model="selectedEvent.name"
+                type="text"
+                label="event name (required)"
+              ></v-text-field>
+              <v-text-field
+                v-model="selectedEvent.details"
+                type="text"
+                label="details"
+              ></v-text-field>
+              <v-text-field
+                v-model="selectedEvent.color"
+                type="color"
+                label="color (click to open color menu)"
+              ></v-text-field>
+              <!-- TODO: add invitees here -->
+              <v-btn
+                type="submit"
+                color="primary"
+                class="mr-4"
+                @click.stop="editDialog = false"
+              >
+                save
+              </v-btn>
+            </v-form>
+          </v-container>
+        </v-card>
+      </v-dialog>
       </v-sheet>
     </v-col>
   </v-row>
@@ -192,7 +215,8 @@ export default {
     selectedElement: null,
     selectedOpen: false,
     events: [],
-    dialog: false
+    dialog: false,
+    editDialog: false
   }),
   mounted() {
     this.getEvents()
@@ -297,7 +321,13 @@ export default {
     },
     async updateEvent(ev) {
       // TODO: patch event
-      Api.patch('/events')
+      const updatedEvent = {
+        name: ev.name,
+        details: ev.details,
+        color: ev.color
+      }
+      console.log(updatedEvent)
+      Api.patch(`/events/${ev._id}`, updatedEvent)
       this.selectedOpen = false
       this.currentlyEditing = null
     },

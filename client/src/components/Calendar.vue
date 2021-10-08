@@ -122,69 +122,52 @@
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <div class="flex-grow-1"></div>
             </v-toolbar>
-
             <v-card-text>
-              <form v-if="currentlyEditing !== selectedEvent._id">
-                {{ selectedEvent.details }}
-              </form>
-              <form v-else>
-                <textarea-autosize
-                  v-model="selectedEvent.details"
-                  type="text"
-                  style="width: 100%"
-                  :min-height="100"
-                  placeholder="add note"
-                >
-                </textarea-autosize>
-              </form>
+              <p class="text-h7 text--primary">
+                {{ selectedEvent.start + ' - ' + selectedEvent.end }}
+              </p>
+              <p>{{ selectedEvent.details }}</p>
             </v-card-text>
-
             <v-card-actions>
               <v-btn text color="secondary" @click="selectedOpen = false">
                 close
               </v-btn>
-              <v-btn
-                v-if="currentlyEditing !== selectedEvent.id"
-                text
-                @click="editDialog = true"
-              >
-                edit
-              </v-btn>
+              <v-btn text @click="editDialog = true"> edit </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
         <v-dialog v-model="editDialog" max-width="500">
-        <v-card>
-          <v-container>
-            <v-form @submit.prevent="updateEvent(selectedEvent)">
-              <v-text-field
-                v-model="selectedEvent.name"
-                type="text"
-                label="event name (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="selectedEvent.details"
-                type="text"
-                label="details"
-              ></v-text-field>
-              <v-text-field
-                v-model="selectedEvent.color"
-                type="color"
-                label="color (click to open color menu)"
-              ></v-text-field>
-              <!-- TODO: add invitees here -->
-              <v-btn
-                type="submit"
-                color="primary"
-                class="mr-4"
-                @click.stop="editDialog = false"
-              >
-                save
-              </v-btn>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
+          <v-card>
+            <v-container>
+              <v-form @submit.prevent="updateEvent(selectedEvent)">
+                <v-text-field
+                  v-model="selectedEvent.name"
+                  type="text"
+                  label="event name (required)"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.details"
+                  type="text"
+                  label="details"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.color"
+                  type="color"
+                  label="color (click to open color menu)"
+                ></v-text-field>
+                <!-- TODO: add invitees here -->
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  class="mr-4"
+                  @click.stop="editDialog = false"
+                >
+                  save
+                </v-btn>
+              </v-form>
+            </v-container>
+          </v-card>
+        </v-dialog>
       </v-sheet>
     </v-col>
   </v-row>
@@ -266,7 +249,6 @@ export default {
           //   TODO: display some error message instead of logging to console
         })
         .then(() => {
-          console.log('This runs every time after success or error.')
           console.log(this.events)
         })
       // TODO: add a
@@ -292,7 +274,13 @@ export default {
       this.$refs.calendar.next()
     },
     async addEvent() {
-      if (this.name && this.start && this.end && this.startTime && this.endTime) {
+      if (
+        this.name &&
+        this.start &&
+        this.end &&
+        this.startTime &&
+        this.endTime
+      ) {
         const event = {
           name: this.name,
           start: this.start + ' ' + this.startTime,

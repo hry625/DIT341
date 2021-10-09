@@ -376,7 +376,6 @@ export default {
       } else {
         alert('You must enter a time and a date')
       }
-      this.getEvents()
     },
     async deleteEvent(ev) {
       console.log('Delete event with id' + ev)

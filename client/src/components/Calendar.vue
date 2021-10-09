@@ -132,7 +132,8 @@
               <v-btn text color="secondary" @click="selectedOpen = false">
                 close
               </v-btn>
-              <v-btn text @click="editDialog = true"> edit </v-btn>
+              <v-btn text @click="editDialog = true"> edit info </v-btn>
+              <v-btn text @click="editDateDialog = true"> edit date </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
@@ -161,6 +162,48 @@
                   color="primary"
                   class="mr-4"
                   @click.stop="editDialog = false"
+                >
+                  save
+                </v-btn>
+              </v-form>
+            </v-container>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="editDateDialog" max-width="500">
+          <v-card>
+            <v-container>
+              <div>
+            <p class="font-weight-bold">Please change the date here</p>
+            <p>Current start date: {{ selectedEvent.start }}</p>
+            <p>Current end date: {{ selectedEvent.end }}</p>
+          </div>
+              <v-form @submit.prevent="updateDate(selectedEvent)">
+                <v-text-field
+                  v-model="selectedEvent.start"
+                  type="date"
+                  label="start date"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.end"
+                  type="date"
+                  label="end date"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.startTime"
+                  type="time"
+                  label="start time"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.endTime"
+                  type="time"
+                  label="end time"
+                ></v-text-field>
+                <!-- TODO: add invitees here -->
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  class="mr-4"
+                  @click.stop="editDateDialog = false"
                 >
                   save
                 </v-btn>
@@ -199,7 +242,8 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
-    editDialog: false
+    editDialog: false,
+    editDateDialog: false
   }),
   mounted() {
     this.getEvents()
@@ -318,6 +362,21 @@ export default {
       Api.patch(`/events/${ev._id}`, updatedEvent)
       this.selectedOpen = false
       this.currentlyEditing = null
+    },
+    updateDate(ev) {
+      if (ev.start && ev.end && ev.startTime && ev.endTime) {
+        const event = {
+          name: ev.name,
+          start: ev.start + ' ' + ev.startTime,
+          end: ev.end + ' ' + ev.endTime,
+          details: ev.details,
+          color: ev.color
+        }
+        Api.put(`/events/${ev._id}`, event)
+      } else {
+        alert('You must enter a time and a date')
+      }
+      this.getEvents()
     },
     async deleteEvent(ev) {
       console.log('Delete event with id' + ev)

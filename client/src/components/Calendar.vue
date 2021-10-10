@@ -37,6 +37,9 @@
               </v-list-item>
             </v-list>
           </v-menu>
+          <v-btn color="red" dark @click="deleteAllEvents">
+            Delete all events
+          </v-btn>
         </v-toolbar>
       </v-sheet>
 
@@ -384,6 +387,10 @@ export default {
         this.events.splice(index, 1)
       })
       this.selectedOpen = false
+      this.getEvents()
+    },
+    deleteAllEvents() {
+      Api.delete('/events')
       this.getEvents()
     },
     showEvent({ nativeEvent, event }) {

@@ -3,9 +3,6 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat color="white">
-          <v-btn color="primary" dark @click.stop="dialog = true">
-            New Event
-          </v-btn>
           <v-btn outlined class="mr-4" @click="setToday"> Today </v-btn>
           <v-btn fab text small @click="prev">
             <v-icon small>mdi-chevron-left</v-icon>
@@ -13,7 +10,7 @@
           <v-btn fab text small @click="next">
             <v-icon small>mdi-chevron-right</v-icon>
           </v-btn>
-          <v-toolbar-title>{{ title }}</v-toolbar-title>
+          <v-toolbar-title class="calendarToolbarTitle">{{ title }}</v-toolbar-title>
           <div class="flex-grow-1"></div>
           <v-menu bottom right>
             <template v-slot:activator="{ on }">
@@ -37,9 +34,6 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-btn color="red" dark @click="deleteAllEvents">
-            Delete all events
-          </v-btn>
         </v-toolbar>
       </v-sheet>
 
@@ -176,10 +170,10 @@
           <v-card>
             <v-container>
               <div>
-            <p class="font-weight-bold">Please change the date here</p>
-            <p>Current start date: {{ selectedEvent.start }}</p>
-            <p>Current end date: {{ selectedEvent.end }}</p>
-          </div>
+                <p class="font-weight-bold">Please change the date here</p>
+                <p>Current start date: {{ selectedEvent.start }}</p>
+                <p>Current end date: {{ selectedEvent.end }}</p>
+              </div>
               <v-form @submit.prevent="updateDate(selectedEvent)">
                 <v-text-field
                   v-model="selectedEvent.start"
@@ -215,6 +209,18 @@
           </v-card>
         </v-dialog>
       </v-sheet>
+      <v-row>
+        <v-col>
+          <v-sheet>
+           <v-btn color="primary" dark @click.stop="dialog = true">
+              New Event
+            </v-btn>
+            <v-btn color="red" outlined dark @click="deleteAllEvents">
+              Delete all events
+            </v-btn>
+          </v-sheet>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -419,3 +425,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@media only screen and (max-width: 440px) {
+  .calendarToolbarTitle {
+    display: none;
+  }
+}
+</style>

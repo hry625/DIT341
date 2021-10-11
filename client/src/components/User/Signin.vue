@@ -8,6 +8,10 @@
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
+            <v-img
+              src="../../assets/calendarPicture.svg"
+              alt="picutre of a calendar"
+            ></v-img>
           <v-card-text>
             <v-container>
               <form @submit.prevent="onSignin">

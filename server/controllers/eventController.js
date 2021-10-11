@@ -22,8 +22,8 @@ router.get('/api/events', function(req, res, next) {
 
 //Filtering events with time and title
 router.get('/api/events', function(req, res, next) {
-    var eventTime = req.query.time;
-    var eventTitle = req.query.title.
+    var eventTime = req.query.start;
+    var eventTitle = req.query.name.
     CalendarEvent.find({eventTime, eventTitle}, function(err, calendarEvent) {
         if (err) { return next(err); }
         res.status(201).json(calendarEvent);
@@ -43,7 +43,7 @@ router.get('/api/events', function(req, res, next) {
     });
 })
 
-//Delete Calendar event by attribute 
+//Delete Calendar all event 
 router.delete('/api/events', function(req, res, next) {
 
     CalendarEvent.remove({}, function(err, calendarEvent) {

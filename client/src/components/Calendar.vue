@@ -3,9 +3,6 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat color="white">
-          <v-btn color="primary" dark @click.stop="dialog = true">
-            New Event
-          </v-btn>
           <v-btn outlined class="mr-4" @click="setToday"> Today </v-btn>
           <v-btn fab text small @click="prev">
             <v-icon small>mdi-chevron-left</v-icon>
@@ -13,7 +10,7 @@
           <v-btn fab text small @click="next">
             <v-icon small>mdi-chevron-right</v-icon>
           </v-btn>
-          <v-toolbar-title>{{ title }}</v-toolbar-title>
+          <v-toolbar-title class="calendarToolbarTitle">{{ title }}</v-toolbar-title>
           <div class="flex-grow-1"></div>
           <v-menu bottom right>
             <template v-slot:activator="{ on }">
@@ -79,6 +76,7 @@
                 type="color"
                 label="color (click to open color menu)"
               ></v-text-field>
+              <!-- TODO: add invitees here -->
               <v-btn
                 type="submit"
                 color="primary"
@@ -91,49 +89,6 @@
           </v-container>
         </v-card>
       </v-dialog>
-
-      <v-dialog v-model="dialogDate" max-width="500">
-        <v-card>
-          <v-container>
-            <v-form @submit.prevent="addEvent">
-              <v-text-field
-                v-model="name"
-                type="text"
-                label="event name (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="details"
-                type="text"
-                label="detail"
-              ></v-text-field>
-              <v-text-field
-                v-model="start"
-                type="date"
-                label="start (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="end"
-                type="date"
-                label="end (required)"
-              ></v-text-field>
-              <v-text-field
-                v-model="color"
-                type="color"
-                label="color (click to open color menu)"
-              ></v-text-field>
-              <v-btn
-                type="submit"
-                color="primary"
-                class="mr-4"
-                @click.stop="dialog = false"
-              >
-                create event
-              </v-btn>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
-
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
@@ -146,14 +101,14 @@
           :type="type"
           @click:event="showEvent"
           @click:more="viewDay"
-          @click:date="setDialogDate"
+          @click:date="setDialog"
           @change="updateRange"
         ></v-calendar>
+        <!--when pressing on an event -->
         <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
           :activator="selectedElement"
-          full-width
           offset-x
         >
           <v-card color="grey lighten-4" :width="350" flat>
@@ -164,46 +119,108 @@
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <div class="flex-grow-1"></div>
             </v-toolbar>
-
             <v-card-text>
-              <form v-if="currentlyEditing !== selectedEvent._id">
-                {{ selectedEvent.details }}
-              </form>
-              <form v-else>
-                <textarea-autosize
-                  v-model="selectedEvent.details"
-                  type="text"
-                  style="width: 100%"
-                  :min-height="100"
-                  placeholder="add note"
-                >
-                </textarea-autosize>
-              </form>
+              <p class="text-h7 text--primary">
+                {{ selectedEvent.start + ' - ' + selectedEvent.end }}
+              </p>
+              <p>{{ selectedEvent.details }}</p>
             </v-card-text>
-
             <v-card-actions>
               <v-btn text color="secondary" @click="selectedOpen = false">
                 close
               </v-btn>
-              <v-btn
-                v-if="currentlyEditing !== selectedEvent.id"
-                text
-                @click.prevent="editEvent(selectedEvent)"
-              >
-                edit
-              </v-btn>
-              <v-btn
-                text
-                v-else
-                type="submit"
-                @click.prevent="updateEvent(selectedEvent)"
-              >
-                Save
-              </v-btn>
+              <v-btn text @click="editDialog = true"> edit info </v-btn>
+              <v-btn text @click="editDateDialog = true"> edit date </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
+        <v-dialog v-model="editDialog" max-width="500">
+          <v-card>
+            <v-container>
+              <v-form @submit.prevent="updateEvent(selectedEvent)">
+                <v-text-field
+                  v-model="selectedEvent.name"
+                  type="text"
+                  label="event name (required)"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.details"
+                  type="text"
+                  label="details"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.color"
+                  type="color"
+                  label="color (click to open color menu)"
+                ></v-text-field>
+                <!-- TODO: add invitees here -->
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  class="mr-4"
+                  @click.stop="editDialog = false"
+                >
+                  save
+                </v-btn>
+              </v-form>
+            </v-container>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="editDateDialog" max-width="500">
+          <v-card>
+            <v-container>
+              <div>
+                <p class="font-weight-bold">Please change the date here</p>
+                <p>Current start date: {{ selectedEvent.start }}</p>
+                <p>Current end date: {{ selectedEvent.end }}</p>
+              </div>
+              <v-form @submit.prevent="updateDate(selectedEvent)">
+                <v-text-field
+                  v-model="selectedEvent.start"
+                  type="date"
+                  label="start date"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.end"
+                  type="date"
+                  label="end date"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.startTime"
+                  type="time"
+                  label="start time"
+                ></v-text-field>
+                <v-text-field
+                  v-model="selectedEvent.endTime"
+                  type="time"
+                  label="end time"
+                ></v-text-field>
+                <!-- TODO: add invitees here -->
+                <v-btn
+                  type="submit"
+                  color="primary"
+                  class="mr-4"
+                  @click.stop="editDateDialog = false"
+                >
+                  save
+                </v-btn>
+              </v-form>
+            </v-container>
+          </v-card>
+        </v-dialog>
       </v-sheet>
+      <v-row>
+        <v-col>
+          <v-sheet>
+           <v-btn color="primary" dark @click.stop="dialog = true">
+              New Event
+            </v-btn>
+            <v-btn color="red" outlined dark @click="deleteAllEvents">
+              Delete all events
+            </v-btn>
+          </v-sheet>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -234,7 +251,8 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
-    dialogDate: false
+    editDialog: false,
+    editDateDialog: false
   }),
   mounted() {
     this.getEvents()
@@ -284,13 +302,12 @@ export default {
           //   TODO: display some error message instead of logging to console
         })
         .then(() => {
-          console.log('This runs every time after success or error.')
           console.log(this.events)
         })
       // TODO: add a
     },
-    setDialogDate({ date }) {
-      this.dialogDate = true
+    setDialog({ date }) {
+      this.dialog = true
       this.focus = date
     },
     viewDay({ date }) {
@@ -310,7 +327,13 @@ export default {
       this.$refs.calendar.next()
     },
     async addEvent() {
-      if (this.name && this.start && this.end && this.startTime && this.endTime) {
+      if (
+        this.name &&
+        this.start &&
+        this.end &&
+        this.startTime &&
+        this.endTime
+      ) {
         const event = {
           name: this.name,
           start: this.start + ' ' + this.startTime,
@@ -339,8 +362,29 @@ export default {
     },
     async updateEvent(ev) {
       // TODO: patch event
+      const updatedEvent = {
+        name: ev.name,
+        details: ev.details,
+        color: ev.color
+      }
+      console.log(updatedEvent)
+      Api.patch(`/events/${ev._id}`, updatedEvent)
       this.selectedOpen = false
       this.currentlyEditing = null
+    },
+    updateDate(ev) {
+      if (ev.start && ev.end && ev.startTime && ev.endTime) {
+        const event = {
+          name: ev.name,
+          start: ev.start + ' ' + ev.startTime,
+          end: ev.end + ' ' + ev.endTime,
+          details: ev.details,
+          color: ev.color
+        }
+        Api.put(`/events/${ev._id}`, event)
+      } else {
+        alert('You must enter a time and a date')
+      }
     },
     async deleteEvent(ev) {
       console.log('Delete event with id' + ev)
@@ -349,6 +393,10 @@ export default {
         this.events.splice(index, 1)
       })
       this.selectedOpen = false
+      this.getEvents()
+    },
+    deleteAllEvents() {
+      Api.delete('/events')
       this.getEvents()
     },
     showEvent({ nativeEvent, event }) {
@@ -377,3 +425,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@media only screen and (max-width: 440px) {
+  .calendarToolbarTitle {
+    display: none;
+  }
+}
+</style>

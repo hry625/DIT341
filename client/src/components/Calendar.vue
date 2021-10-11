@@ -1,17 +1,23 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="64">
-        <v-toolbar flat color="white">
-          <v-btn outlined class="mr-4" @click="setToday"> Today </v-btn>
+      <div class="calender-title">
+        <div>
           <v-btn fab text small @click="prev">
             <v-icon small>mdi-chevron-left</v-icon>
           </v-btn>
           <v-btn fab text small @click="next">
             <v-icon small>mdi-chevron-right</v-icon>
           </v-btn>
-          <v-toolbar-title class="calendarToolbarTitle">{{ title }}</v-toolbar-title>
+        </div>
+        <h3 class="calendar-actual-title">
+          {{ title }}
+        </h3>
+      </div>
+      <v-sheet height="64">
+        <v-toolbar class="calendar-toolbar" flat color="white">
           <div class="flex-grow-1"></div>
+          <v-btn outlined class="mr-4 calendar-today" @click="setToday"> Today </v-btn>
           <v-menu bottom right>
             <template v-slot:activator="{ on }">
               <v-btn outlined v-on="on">
@@ -212,10 +218,21 @@
       <v-row>
         <v-col>
           <v-sheet>
-           <v-btn color="primary" dark @click.stop="dialog = true">
+            <v-btn
+              class="u-margin-right calendar-buttons-bottom"
+              color="green"
+              dark
+              @click.stop="dialog = true"
+            >
               New Event
             </v-btn>
-            <v-btn color="red" outlined dark @click="deleteAllEvents">
+            <v-btn
+              class="calendar-buttons-bottom"
+              color="red"
+              outlined
+              dark
+              @click="deleteAllEvents"
+            >
               Delete all events
             </v-btn>
           </v-sheet>
@@ -427,9 +444,25 @@ export default {
 </script>
 
 <style scoped>
-@media only screen and (max-width: 440px) {
-  .calendarToolbarTitle {
-    display: none;
-  }
+.calender-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 25px;
+}
+
+.calendar-actual-title {
+  font-size: 25px;
+}
+
+.u-margin-right {
+  margin-right: 10px;
+}
+
+.calendar-buttons-bottom {
+  margin-top: 10px;
+  margin-left: 10px;
 }
 </style>

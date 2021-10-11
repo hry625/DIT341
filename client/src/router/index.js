@@ -8,6 +8,7 @@ import Profile from '../components/User/Profile.vue'
 import Signup from '../components/User/Signup.vue'
 import Signin from '../components/User/Signin.vue'
 import AuthGuard from './auth-guard'
+import Calendar from '../components/Calendar.vue'
 
 Vue.use(Router)
 
@@ -52,6 +53,12 @@ export default new Router({
       name: 'JoinChat',
       component: ChatList,
       beforeEnter: AuthGuard
+    },
+    {
+      // TODO: change so that claendar is only reacheable after login
+      path: '/calendar',
+      name: 'Calendar',
+      component: Calendar
     }
   ],
   mode: 'history'

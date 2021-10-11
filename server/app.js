@@ -4,6 +4,8 @@ var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
+var admin = require('firebase-admin');
+var serviceAccount = require('./config/sharedcalendar-f9ae0-firebase-adminsdk-40mq4-8a0207f009.json')
 
 var eventController = require('./controllers/eventController');
 var inviteeController = require('./controllers/inviteeController');
@@ -14,6 +16,7 @@ var userController = require('./controllers/userController');
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/eventDB';
 var port = process.env.PORT || 3000;
 
+
 // Connect to MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function(err) {
     if (err) {
@@ -23,6 +26,9 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, 
     }
     console.log(`Connected to MongoDB with URI: ${mongoURI}`);
 });
+admin.initializeApp({credential: admin.credential.cert(serviceAccount),
+    databaseURL:'https://sharedcalendar-f9ae0.firebaseio.com'
+})
 
 // Create Express app
 var app = express();
@@ -35,6 +41,7 @@ app.use(morgan('dev'));
 app.options('*', cors());
 app.use(cors());
 
+
 // Import routes
 app.get('/api', function(req, res) {
     res.json({ 'message': 'Welcome to your DIT341 backend ExpressJS project!' });
@@ -43,6 +50,20 @@ app.get('/api', function(req, res) {
 app.use(eventController);
 app.use(inviteeController);
 app.use(userController);
+
+function checkAuth(req,res,next){
+    if(req.headers.authtoken){
+        admin.auth().verifyIdToken(req.headers.authtoken).then(()=>{next()}).catch(()=>{res.status(403).send('Unauthorized')});
+    }else{
+        res.status(403).send('Unauthorized')
+    }
+}
+
+app.use('/api/auth', checkAuth)
+app.get('/api/auth', function(req,res){
+    res.status(200).json({message: 'Hello User!'})
+})
+
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function(req, res) {

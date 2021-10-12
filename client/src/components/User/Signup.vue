@@ -38,6 +38,30 @@
                 <v-layout row>
                   <v-flex xs12>
                     <v-text-field
+                      name="firstname"
+                      label="First Name"
+                      id="firstname"
+                      v-model="firstName"
+                      type="text"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex xs12>
+                    <v-text-field
+                      name="lastname"
+                      label="Last Name"
+                      id="lastname"
+                      v-model="lastName"
+                      type="text"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex xs12>
+                    <v-text-field
                       name="password"
                       label="Password"
                       id="password"
@@ -80,7 +104,9 @@ export default {
       email: '',
       username: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      firstName: '',
+      lastName: ''
     }
   },
   computed: {
@@ -111,7 +137,9 @@ export default {
       this.$store.dispatch('signUserUp', {
         email: this.email,
         password: this.password,
-        username: this.username
+        username: this.username,
+        firstName: this.firstName,
+        lastName: this.lastName
       })
     },
     onDismissed() {

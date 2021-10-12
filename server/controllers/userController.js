@@ -11,8 +11,8 @@ router.post('/api/register', async function(req, res) {
       firstName,
       lastName,
       email,
-      username,
-      password
+      username
+      // password
     } = req.body
 
     let ifExists = await User.findOne({
@@ -28,8 +28,8 @@ router.post('/api/register', async function(req, res) {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      username: username,
-      password: password
+      username: username
+      // password: password
     })
     await newUser.save()
     console.log(newUser)

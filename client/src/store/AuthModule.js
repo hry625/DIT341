@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/database'
+import { Api } from '../Api'
 
 const AuthModule = {
   state: {
@@ -38,6 +39,7 @@ const AuthModule = {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(
           auth => {
+            Api.post('/register', payload)
             firebase.database().ref('users').child(auth.user.uid).set({
               name: payload.username
             })

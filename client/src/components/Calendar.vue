@@ -1,5 +1,5 @@
 <template>
-  <v-row class="fill-height">
+  <v-row>
     <v-col>
       <div class="calender-title">
         <div>

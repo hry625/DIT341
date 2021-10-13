@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
     <v-row no-gutters>
-      <v-col sm="6" xs="12" offset-sm="3">
+      <v-col sm="6" xs="12">
+        <h5>Create a new chat</h5>
         <form @submit.prevent="createChat">
           <v-col xs="12">
             <v-text-field
@@ -12,7 +13,7 @@
               type="text"
               required
             ></v-text-field>
-            <v-btn type="submit">Create</v-btn>
+            <v-btn type="submit" depressed color="green" dark>Create</v-btn>
           </v-col>
         </form>
       </v-col>

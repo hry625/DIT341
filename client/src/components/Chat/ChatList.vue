@@ -1,11 +1,10 @@
 <template>
   <v-container v-on:scroll="onScroll" ref="chatlistContainer">
-    <v-row no-gutters>
+    <v-row>
       <v-col v-for="chat in chats" :key="chat.name" cols="12" sm="4">
         <v-card class="mx-auto" max-width="344" outlined>
           <v-list-item three-line>
             <v-list-item-content>
-              <div class="overline mb-4">{{ chat.key }}</div>
               <v-list-item-title class="headline mb-1">{{
                 chat.name
               }}</v-list-item-title>

@@ -1,9 +1,11 @@
 <template>
   <div>
     <v-container>
-            <chats></chats>
-            <create-chat></create-chat>
-            <chat-list></chat-list>
+      <h3 id="title">Here you can find your chats!</h3>
+      <chats></chats>
+      <h5>Join a chat!</h5>
+      <chat-list></chat-list>
+      <create-chat></create-chat>
     </v-container>
   </div>
 </template>
@@ -23,13 +25,14 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin-top: 20px;
-  text-transform: uppercase;
+
+#title {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 h5 {
-  margin-top: 80px;
-  text-transform: uppercase;
+  margin-top: 30px
 }
+
 </style>

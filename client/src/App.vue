@@ -1,11 +1,8 @@
 <template>
   <v-app>
-    <v-navigation-drawer absolute temporary v-model="drawerToggle">
-      <v-list-item-title class="text-h6" id="menu" v-if="userIsAuthenticated">
+    <v-navigation-drawer absolute temporary v-model="drawerToggle" v-if="userIsAuthenticated">
+      <v-list-item-title class="text-h6" id="menu">
         👋 Welcome
-      </v-list-item-title>
-      <v-list-item-title class="text-h6" id="menu" v-else>
-        Please login
       </v-list-item-title>
       <v-list-item v-for="item in menuItems" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
@@ -46,7 +43,7 @@
         >
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items v-for="item in menuItems" v-bind:key="item.route">
+      <v-toolbar-items v-for="item in menuBar" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
           <v-icon left>{{ item.icon }}</v-icon>
           <div class="hidden-xs-only">{{ item.title }}</div>
@@ -63,20 +60,21 @@
 export default {
   data() {
     return {
-      drawerToggle: false
+      drawerToggle: false,
+      menuItems: [{ icon: 'mdi-chat', title: 'Chat', route: '/chat' },
+        { icon: 'mdi-calendar', title: 'Calendar', route: '/calendar' },
+        { icon: 'mdi-account', title: 'Profile', route: '/profile' }]
     }
   },
   computed: {
-    menuItems() {
+    menuBar() {
       let items = [
         { icon: 'mdi-account-plus', title: 'Register', route: '/register' },
         { icon: 'mdi-lock-open', title: 'Login', route: '/login' }
       ]
       if (this.userIsAuthenticated) {
         items = [
-          { icon: 'mdi-chat', title: 'Chat', route: '/chat' },
-          { icon: 'mdi-calendar', title: 'Calendar', route: '/calendar' },
-          { icon: 'mdi-account', title: 'Profile', route: '/profile' }
+          { icon: 'mdi-logout', title: 'LogOUt', route: '/' }
         ]
       }
       return items

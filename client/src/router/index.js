@@ -55,10 +55,10 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
-      // TODO: change so that claendar is only reacheable after login
       path: '/calendar',
       name: 'Calendar',
-      component: Calendar
+      component: Calendar,
+      beforeEnter: AuthGuard
     }
   ],
   mode: 'history'

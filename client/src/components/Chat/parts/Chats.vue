@@ -2,7 +2,7 @@
 <v-container>
   <v-list subheader>
     <v-list-title id="list-title">My Chats</v-list-title>
-    <v-subheader>Please click on the chat to start chatting!</v-subheader>
+    <v-subheader>:)</v-subheader>
     <v-list-item
       avatar
       v-for="(chat, index) in chats"

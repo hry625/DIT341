@@ -14,9 +14,8 @@ export default {
     }
   },
   mounted() {
-    let img, that
-    img = new Image()
-    that = this
+    const img = new Image()
+    const that = this
     img.onload = function () {
       that.imgSrc = that.imgsrc
       that.$emit('imageLoad')

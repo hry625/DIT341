@@ -65,7 +65,8 @@ export default {
       if (this.userIsAuthenticated) {
         items = [
           { icon: 'mdi-forum', title: 'Create a Chat', route: '/create' },
-          { icon: 'mdi-chat', title: 'Chat List', route: '/discover' }
+          { icon: 'mdi-chat', title: 'Chat List', route: '/discover' },
+          { icon: 'mdi-account', title: 'Profile', route: '/profile' }
         ]
       }
       return items

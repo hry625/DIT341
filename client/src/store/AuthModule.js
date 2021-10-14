@@ -51,6 +51,7 @@ const AuthModule = {
                     username: payload.username
                   }
                   commit('setUser', newUser)
+                  localStorage.setItem('email', auth.user.email)
                 }
               )
               .catch(
@@ -75,12 +76,16 @@ const AuthModule = {
         .then(
           auth => {
             firebase.database().ref('users').child(auth.user.uid).once('value', function (data) {
+              Api.post('/auth', { uid: auth.user.uid })
               commit('setLoading', false)
               const newUser = {
                 id: auth.user.uid,
                 username: auth.user.email
               }
               commit('setUser', newUser)
+
+              /** uid == jwt */
+              localStorage.setItem('email', auth.user.email)
             })
           }
         )

@@ -28,7 +28,8 @@ export default {
   data() {
     return {
       groupName: '',
-      loading: false
+      loading: false,
+      groupID: ''
     }
   },
   computed: {
@@ -55,12 +56,13 @@ export default {
       }
       Api.post('/groups', group)
         .then((res) => {
+          this.groupID = res.data._id
           console.log(res.data._id)
           console.log(res)
         })
         .then(() => {
           this.loading = false
-          this.$router.push('/group/' + res.data._id)
+          this.$router.push('/group/' + this.groupID)
         })
 
       const newPostKey = firebase.database().ref().child('groups').push().key

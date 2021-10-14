@@ -1,8 +1,7 @@
 <template>
 <v-container>
-  <v-list subheader>
-    <v-list-title id="list-title">My Chats</v-list-title>
-    <v-subheader>:)</v-subheader>
+  <v-list>
+    <v-list-title>My chats</v-list-title>
     <v-list-item
       avatar
       v-for="(chat, index) in chats"

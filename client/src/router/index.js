@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/Home.vue'
 import Chat from '../components/Chat/Chat.vue'
-import Create from '../components/Chat/Create.vue'
+import CreateGroup from '../components/Chat/CreateGroup.vue'
 import ChatList from '../components/Chat/ChatList.vue'
 import Profile from '../components/User/Profile.vue'
 import Signup from '../components/User/Signup.vue'
@@ -37,16 +37,16 @@ export default new Router({
       component: Profile
     },
     {
-      path: '/chat/:id',
-      name: 'Chat',
+      path: '/group/:id',
+      name: 'Group',
       component: Chat,
       props: true,
       beforeEnter: AuthGuard
     },
     {
       path: '/create',
-      name: 'CreateChat',
-      component: Create,
+      name: 'CreateGroup',
+      component: CreateGroup,
       beforeEnter: AuthGuard
     },
     {

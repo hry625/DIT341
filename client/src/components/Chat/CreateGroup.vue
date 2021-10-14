@@ -61,27 +61,31 @@ export default {
           console.log(res)
         })
         .then(() => {
+          const groupInfo = { groupID: this.groupID, groupName: this.groupName }
+          // use firebase to indicate this is a new message updated on certain group
+          firebase.database().ref().child('group').push(groupInfo)
+
           this.loading = false
           this.$router.push('/group/' + this.groupID)
         })
 
-      const newPostKey = firebase.database().ref().child('groups').push().key
-      const updates = {}
-      updates['/groups/' + newPostKey] = { name: this.chatName }
-      updates['/group_members/' + newPostKey + '/users/' + this.user.id] = {
-        timestamp: time
-      }
-      updates['users/' + this.user.id + '/groups/' + newPostKey] = {
-        timestamp: time
-      }
-      firebase
-        .database()
-        .ref()
-        .update(updates)
-        .then(() => {
-          this.loading = false
-          this.$router.push('/group/' + newPostKey)
-        })
+      // const newPostKey = firebase.database().ref().child('groups').push().key
+      // const updates = {}
+      // updates['/groups/' + newPostKey] = { name: this.chatName }
+      // updates['/group_members/' + newPostKey + '/users/' + this.user.id] = {
+      //   timestamp: time
+      // }
+      // updates['users/' + this.user.id + '/groups/' + newPostKey] = {
+      //   timestamp: time
+      // }
+      // firebase
+      //   .database()
+      //   .ref()
+      //   .update(updates)
+      //   .then(() => {
+      //     this.loading = false
+      //     this.$router.push('/group/' + newPostKey)
+      //   })
     }
   }
 }

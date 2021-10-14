@@ -172,7 +172,7 @@ export default {
           username: this.username,
           content: this.content,
           date: new Date().toString(),
-          chatID: this.id
+          groupID: this.id
         })
         this.content = ''
       }

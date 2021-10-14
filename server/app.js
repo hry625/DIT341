@@ -11,7 +11,7 @@ var eventController = require('./controllers/eventController');
 var inviteeController = require('./controllers/inviteeController');
 var userController = require('./controllers/userController');
 var groupController = require('./controllers/groupController');
-
+var messageController = require('./controllers/messageController');
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/eventDB';
@@ -52,6 +52,7 @@ app.use(eventController);
 app.use(inviteeController);
 app.use(userController);
 app.use(groupController);
+app.use(messageController);
 
 function checkAuth(req,res,next){
     if(req.headers.authtoken){

@@ -1,6 +1,7 @@
 <template>
-  <v-list subheader>
-    <v-subheader>Your Chats</v-subheader>
+<v-container>
+  <v-list>
+    <v-list-title>My chats</v-list-title>
     <v-list-item
       avatar
       v-for="(chat, index) in chats"
@@ -15,6 +16,7 @@
       </v-list-item-action>
     </v-list-item>
   </v-list>
+</v-container>
 </template>
 
 <script>
@@ -29,3 +31,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#list-title {
+  margin-top: 40px;
+}
+</style>

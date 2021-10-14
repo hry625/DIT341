@@ -9,6 +9,7 @@ import Signup from '../components/User/Signup.vue'
 import Signin from '../components/User/Signin.vue'
 import AuthGuard from './auth-guard'
 import Calendar from '../components/Calendar.vue'
+import ChatHome from '../components/Chat/ChatHome.vue'
 
 Vue.use(Router)
 
@@ -55,10 +56,16 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
-      // TODO: change so that claendar is only reacheable after login
       path: '/calendar',
       name: 'Calendar',
-      component: Calendar
+      component: Calendar,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/chat',
+      name: 'Chat',
+      component: ChatHome,
+      beforeEnter: AuthGuard
     }
   ],
   mode: 'history'

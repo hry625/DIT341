@@ -308,5 +308,25 @@ router.post('/api/changeInvationStatus', authRequiredMiddleware, async function(
     })
   }
 })
+// find userEmail
+router.get('/api/users', function(req, res, next) {
+  var email = req.query.email;
+  User.find({email}, function(err, user) {
+      if (err) { return next(err); }
+      console.log(user)
+      res.status(201).json(user);
+  })
+})
+
+// router.get('/api/users', function(req, res, next) {
+//   var attribute = req.body;
+//   User.findOne({email:"test7@gmail.com"},function(err, user) {
+//       if (err) { return next(err); }
+//       res.status(201).json(user);
+//       console.log(user);
+//   })
+// })
+
+
 
 module.exports = router;

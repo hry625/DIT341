@@ -10,6 +10,7 @@ var serviceAccount = require('./config/sharedcalendar-f9ae0-firebase-adminsdk-40
 var eventController = require('./controllers/eventController');
 var inviteeController = require('./controllers/inviteeController');
 var userController = require('./controllers/userController');
+var groupController = require('./controllers/groupController');
 
 
 // Variables
@@ -50,6 +51,7 @@ app.get('/api', function(req, res) {
 app.use(eventController);
 app.use(inviteeController);
 app.use(userController);
+app.use(groupController);
 
 function checkAuth(req,res,next){
     if(req.headers.authtoken){

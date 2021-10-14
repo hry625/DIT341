@@ -7,11 +7,11 @@
           <chats></chats>
         </v-col>
         <v-col> </v-col>
-        <create-chat></create-chat>
+        <create-group></create-group>
       </v-row>
       <v-row>
-      <h5>Join a chat!</h5>
-      <chat-list></chat-list>
+        <h5>Join a chat!</h5>
+        <chat-list></chat-list>
       </v-row>
     </v-container>
   </div>
@@ -20,13 +20,13 @@
 <script>
 import Chats from './parts/Chats.vue'
 import ChatList from './ChatList.vue'
-import CreateChat from './Create.vue'
+import CreateGroup from './CreateGroup.vue'
 
 export default {
   components: {
     chats: Chats,
     chatList: ChatList,
-    createChat: CreateChat
+    createGroup: CreateGroup
   }
 }
 </script>

@@ -61,9 +61,17 @@ export default {
           console.log(res)
         })
         .then(() => {
-          const groupInfo = { groupID: this.groupID, groupName: this.groupName }
+          const groupInfo = {
+            groupName: this.groupName,
+            messageCount: 0
+          }
           // use firebase to indicate this is a new message updated on certain group
-          firebase.database().ref().child('group').push(groupInfo)
+          firebase
+            .database()
+            .ref()
+            .child('group')
+            .child(this.groupID)
+            .set(groupInfo)
 
           this.loading = false
           this.$router.push('/group/' + this.groupID)

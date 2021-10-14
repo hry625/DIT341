@@ -21,14 +21,16 @@ const ChatModule = {
         timestamp: payload.date
       }
       Api.post(url, message)
+      firebase.database().ref().child('group').child(groupID).child('messageCount').set(firebase.database.ServerValue.increment(1))
+      // .child(groupID).child('count').update(firebase.database.ServerValue.increment(1))
+      //   .catch((error) => {
+      //     console.log(error)
+      //   }
+      //   )
+      // TODO:remove this
       firebase.database().ref('messages').child(groupID).child('messages').push(message)
         .then(
           (data) => {
-          }
-        )
-        .catch(
-          (error) => {
-            console.log(error)
           }
         )
     },

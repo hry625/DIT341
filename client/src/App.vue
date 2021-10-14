@@ -15,13 +15,13 @@
         <v-list-item
           avatar
           v-for="user in onlineUsers[1]"
-          v-bind:key="user.user.username"
+          v-bind:key="user.username"
         >
           <v-list-item-avatar>
             <img src="https://randomuser.me/api/portraits/men/85.jpg" />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>{{ user.user.username }}</v-list-item-title>
+            <v-list-item-title>{{ user.username }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -65,7 +65,7 @@ export default {
       if (this.userIsAuthenticated) {
         items = [
           { icon: 'mdi-forum', title: 'Create a Chat', route: '/create' },
-          { icon: 'mdi-chat', title: 'Chat List', route: '/discover' }
+          { icon: 'mdi-chat', title: 'Profile', route: '/profile' }
         ]
       }
       return items

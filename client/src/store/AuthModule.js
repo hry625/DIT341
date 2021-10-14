@@ -57,6 +57,7 @@ const AuthModule = {
                     email: payload.email
                   }
                   commit('setUser', newUser)
+                  localStorage.setItem('email', auth.user.email)
                 }
               )
               .catch(

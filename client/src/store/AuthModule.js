@@ -21,11 +21,11 @@ const AuthModule = {
               myUserRef.onDisconnect()
                 .remove()
               // set user's online status
-              const presenceObject = { user: payload, status: 'online' }
+              const presenceObject = { username: payload.username, status: 'online' }
               myUserRef.set(presenceObject)
             } else {
               // client has lost network
-              const presenceObject = { user: payload, status: 'offline' }
+              const presenceObject = { username: payload.username, status: 'offline' }
               myUserRef.set(presenceObject)
             }
           }
@@ -41,14 +41,20 @@ const AuthModule = {
           auth => {
             Api.post('/register', payload)
             firebase.database().ref('users').child(auth.user.uid).set({
-              name: payload.username
+              username: payload.username,
+              firstName: payload.firstName,
+              lastName: payload.lastName,
+              email: payload.email
             })
               .then(
                 message => {
                   commit('setLoading', false)
                   const newUser = {
                     id: auth.user.uid,
-                    username: payload.username
+                    username: payload.username,
+                    firstName: payload.firstName,
+                    lastName: payload.lastName,
+                    email: payload.email
                   }
                   commit('setUser', newUser)
                 }
@@ -74,14 +80,33 @@ const AuthModule = {
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           auth => {
-            firebase.database().ref('users').child(auth.user.uid).once('value', function (data) {
+            Api({
+              method: 'GET',
+              url: '/users',
+              params: { email: payload.email }
+            }).then((res) => {
+              console.log(res.data)
               commit('setLoading', false)
               const newUser = {
                 id: auth.user.uid,
-                username: auth.user.email
+                firstName: res.data[0].firstName,
+                lastName: res.data[0].lastName,
+                email: res.data[0].email,
+                username: res.data[0].username
               }
               commit('setUser', newUser)
+            }).catch(error => {
+              commit('setLoading', false)
+              commit('setError', error)
             })
+            // firebase.database().ref('users').child(auth.user.uid).once('value', function (data) {
+            //   commit('setLoading', false)
+            //   const newUser = {
+            //     id: auth.user.uid,
+            //     username: auth.user.email
+            //   }
+            //   commit('setUser', newUser)
+            // })
           }
         )
         .catch(

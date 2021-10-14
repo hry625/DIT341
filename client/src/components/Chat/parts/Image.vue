@@ -14,7 +14,7 @@ export default {
     }
   },
   mounted() {
-    let img, that
+    var img, that
     img = new Image()
     that = this
     img.onload = function () {

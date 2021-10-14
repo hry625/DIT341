@@ -1,11 +1,18 @@
 <template>
   <div>
     <v-container>
-      <h3 id="title">Here you can find your chats!</h3>
-      <chats></chats>
+      <v-row>
+        <v-col>
+          <h3 id="title">Here you can find your chats!</h3>
+          <chats></chats>
+        </v-col>
+        <v-col> </v-col>
+        <create-chat></create-chat>
+      </v-row>
+      <v-row>
       <h5>Join a chat!</h5>
       <chat-list></chat-list>
-      <create-chat></create-chat>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -25,14 +32,12 @@ export default {
 </script>
 
 <style scoped>
-
 #title {
   margin-top: 15px;
   margin-bottom: 15px;
 }
 
 h5 {
-  margin-top: 30px
+  margin-top: 30px;
 }
-
 </style>

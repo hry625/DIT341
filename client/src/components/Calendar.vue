@@ -319,12 +319,10 @@ export default {
           this.events = []
           console.log(error)
           alert('Oops something went wrong' + ' ' + error)
-          //   TODO: display some error message instead of logging to console
         })
         .then(() => {
           console.log(this.events)
         })
-      // TODO: add a
     },
     setDialog({ date }) {
       this.dialog = true
@@ -364,7 +362,6 @@ export default {
         await Api.post('/events', event).catch((error) => {
           console.log(error)
           alert('Oops something went wrong' + ' ' + error)
-          //   TODO: display some error message instead of logging to console
         })
         /* await db.collection('calEvent').add({
           name: this.name,
@@ -385,7 +382,6 @@ export default {
       this.currentlyEditing = ev._id
     },
     async updateEvent(ev) {
-      // TODO: patch event
       const updatedEvent = {
         name: ev.name,
         details: ev.details,
@@ -395,7 +391,6 @@ export default {
       Api.patch(`/events/${ev._id}`, updatedEvent).catch((error) => {
         console.log(error)
         alert('Oops something went wrong' + ' ' + error)
-        //   TODO: display some error message instead of logging to console
       })
       this.selectedOpen = false
       this.currentlyEditing = null
@@ -403,17 +398,12 @@ export default {
     updateDate(ev) {
       if (ev.start && ev.end && ev.startTime && ev.endTime) {
         const event = {
-          name: ev.name,
           start: ev.start + ' ' + ev.startTime,
-          end: ev.end + ' ' + ev.endTime,
-          details: ev.details,
-          color: ev.color
+          end: ev.end + ' ' + ev.endTime
         }
-        // TODO: change to patch
-        Api.put(`/events/${ev._id}`, event).catch((error) => {
+        Api.patch(`/events/${ev._id}`, event).catch((error) => {
           console.log(error)
           alert('Oops something went wrong' + ' ' + error)
-          //   TODO: display some error message instead of logging to console
         })
       } else {
         alert('You must enter a time and a date')
@@ -425,7 +415,6 @@ export default {
         .catch((error) => {
           console.log(error)
           alert('Oops something went wrong' + ' ' + error)
-          //   TODO: display some error message instead of logging to console
         })
         .then((response) => {
           const index = this.events.findIndex((event) => event._id === ev)
@@ -438,7 +427,6 @@ export default {
       Api.delete('/events').catch((error) => {
         console.log(error)
         alert('Oops something went wrong' + ' ' + error)
-        //   TODO: display some error message instead of logging to console
       })
       this.getEvents()
     },

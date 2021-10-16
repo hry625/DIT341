@@ -17,7 +17,9 @@
       <v-sheet height="64">
         <v-toolbar class="calendar-toolbar" flat color="white">
           <div class="flex-grow-1"></div>
-          <v-btn outlined class="mr-4 calendar-today" @click="setToday"> Today </v-btn>
+          <v-btn outlined class="mr-4 calendar-today" @click="setToday">
+            Today
+          </v-btn>
           <v-menu bottom right>
             <template v-slot:activator="{ on }">
               <v-btn outlined v-on="on">
@@ -316,6 +318,7 @@ export default {
         .catch((error) => {
           this.events = []
           console.log(error)
+          alert('Oops something went wrong' + ' ' + error)
           //   TODO: display some error message instead of logging to console
         })
         .then(() => {
@@ -358,7 +361,11 @@ export default {
           details: this.details,
           color: this.color
         }
-        await Api.post('/events', event)
+        await Api.post('/events', event).catch((error) => {
+          console.log(error)
+          alert('Oops something went wrong' + ' ' + error)
+          //   TODO: display some error message instead of logging to console
+        })
         /* await db.collection('calEvent').add({
           name: this.name,
           details: this.details,
@@ -385,7 +392,11 @@ export default {
         color: ev.color
       }
       console.log(updatedEvent)
-      Api.patch(`/events/${ev._id}`, updatedEvent)
+      Api.patch(`/events/${ev._id}`, updatedEvent).catch((error) => {
+        console.log(error)
+        alert('Oops something went wrong' + ' ' + error)
+        //   TODO: display some error message instead of logging to console
+      })
       this.selectedOpen = false
       this.currentlyEditing = null
     },
@@ -398,22 +409,37 @@ export default {
           details: ev.details,
           color: ev.color
         }
-        Api.put(`/events/${ev._id}`, event)
+        // TODO: change to patch
+        Api.put(`/events/${ev._id}`, event).catch((error) => {
+          console.log(error)
+          alert('Oops something went wrong' + ' ' + error)
+          //   TODO: display some error message instead of logging to console
+        })
       } else {
         alert('You must enter a time and a date')
       }
     },
     async deleteEvent(ev) {
       console.log('Delete event with id' + ev)
-      Api.delete(`/events/${ev}`).then((response) => {
-        const index = this.events.findIndex((event) => event._id === ev)
-        this.events.splice(index, 1)
-      })
+      Api.delete(`/events/${ev}`)
+        .catch((error) => {
+          console.log(error)
+          alert('Oops something went wrong' + ' ' + error)
+          //   TODO: display some error message instead of logging to console
+        })
+        .then((response) => {
+          const index = this.events.findIndex((event) => event._id === ev)
+          this.events.splice(index, 1)
+        })
       this.selectedOpen = false
       this.getEvents()
     },
     deleteAllEvents() {
-      Api.delete('/events')
+      Api.delete('/events').catch((error) => {
+        console.log(error)
+        alert('Oops something went wrong' + ' ' + error)
+        //   TODO: display some error message instead of logging to console
+      })
       this.getEvents()
     },
     showEvent({ nativeEvent, event }) {

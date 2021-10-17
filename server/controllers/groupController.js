@@ -11,4 +11,21 @@ router.post('/api/groups',function(req,res,next){
     })
 })
 
+// router.get('/api/groups',function(req,res,next){
+//     Group.find( function(err, group) {
+//         if (err) { return next(err); }
+//         console.log(group)
+//         res.status(201).json(group);
+//     })
+// })
+// find user's group with user's ID
+router.get('/api/groups',function(req,res,next){
+    var user = req.query.userID
+    Group.find({'groupMember.userID':user}, function(err, group) {
+        if (err) { return next(err); }
+        console.log(group)
+        res.status(201).json(group);
+    })
+})
+
 module.exports = router;

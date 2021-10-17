@@ -39,7 +39,13 @@ const AuthModule = {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(
           auth => {
-            Api.post('/register', payload)
+            const data = {
+              username: payload.username,
+              firstName: payload.firstName,
+              lastName: payload.lastName,
+              email: payload.email
+            }
+            Api.post('/register', data)
             firebase.database().ref('users').child(auth.user.uid).set({
               username: payload.username,
               firstName: payload.firstName,
@@ -57,7 +63,7 @@ const AuthModule = {
                     email: payload.email
                   }
                   commit('setUser', newUser)
-                  localStorage.setItem('email', auth.user.email)
+                  // localStorage.setItem('email', auth.user.email)
                 }
               )
               .catch(

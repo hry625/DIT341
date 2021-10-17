@@ -377,7 +377,7 @@ router.get("/api/users", function (req, res, next) {
 // find userEmail
 router.get('/api/users', function(req, res, next) {
   var email = req.query.email;
-  User.find({email}, function(err, user) {
+  User.findOne({email}, function(err, user) {
       if (err) { return next(err); }
       console.log(user)
       res.status(201).json(user);

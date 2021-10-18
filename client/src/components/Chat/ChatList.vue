@@ -118,7 +118,7 @@ export default {
       console.log(group)
       const groupId = group.key
       const time = new Date().valueOf()
-      var newGroup = {
+      const newGroup = {
         name: group.name,
         groupMember: [
           {

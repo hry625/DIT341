@@ -17,7 +17,9 @@
       <v-sheet height="64">
         <v-toolbar class="calendar-toolbar" flat color="white">
           <div class="flex-grow-1"></div>
-          <v-btn outlined class="mr-4 calendar-today" @click="setToday"> Today </v-btn>
+          <v-btn outlined class="mr-4 calendar-today" @click="setToday">
+            Today
+          </v-btn>
           <v-menu bottom right>
             <template v-slot:activator="{ on }">
               <v-btn outlined v-on="on">
@@ -310,18 +312,25 @@ export default {
     async getEvents() {
       Api.get('/events')
         .then((response) => {
+          console.log('response')
           console.log(response.data)
           this.events = response.data
         })
         .catch((error) => {
           this.events = []
+          console.log('error')
           console.log(error)
-          //   TODO: display some error message instead of logging to console
+          if (error.response) {
+            alert(
+              'Oh no something went wrong when fetching events, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong when fetching events')
+          }
         })
         .then(() => {
           console.log(this.events)
         })
-      // TODO: add a
     },
     setDialog({ date }) {
       this.dialog = true
@@ -344,6 +353,7 @@ export default {
       this.$refs.calendar.next()
     },
     async addEvent() {
+      // TODO: check if event time make sense, It cannot end before it starts.
       if (
         this.name &&
         this.start &&
@@ -351,25 +361,38 @@ export default {
         this.startTime &&
         this.endTime
       ) {
-        const event = {
-          name: this.name,
-          start: this.start + ' ' + this.startTime,
-          end: this.end + ' ' + this.endTime,
-          details: this.details,
-          color: this.color
+        console.log('start: ' + this.start + ' end: ' + this.end)
+        if (
+          (this.startTime > this.endTime && this.start < this.end) ||
+          (this.startTime < this.endTime && this.start <= this.end) ||
+          this.start < this.end
+        ) {
+          const event = {
+            name: this.name,
+            start: this.start + ' ' + this.startTime,
+            end: this.end + ' ' + this.endTime,
+            details: this.details,
+            color: this.color
+          }
+          await Api.post('/events', event).catch((error) => {
+            console.log(error)
+            if (error.response) {
+              alert(
+                'Failed to created the event, Status code ' +
+                  error.response.status
+              )
+            } else {
+              alert('Oops something went wrong when creating the event')
+            }
+          })
+          this.getEvents()
+          this.name = ''
+          this.details = ''
+          this.start = ''
+          this.end = ''
+        } else {
+          alert('The event cannot end before it starts, plz check the time ;)')
         }
-        await Api.post('/events', event)
-        /* await db.collection('calEvent').add({
-          name: this.name,
-          details: this.details,
-          start: this.start,
-          end: this.end,
-        }) */
-        this.getEvents()
-        this.name = ''
-        this.details = ''
-        this.start = ''
-        this.end = ''
       } else {
         alert('You must enter event name, start/end date , and start/end time')
       }
@@ -378,42 +401,85 @@ export default {
       this.currentlyEditing = ev._id
     },
     async updateEvent(ev) {
-      // TODO: patch event
       const updatedEvent = {
         name: ev.name,
         details: ev.details,
         color: ev.color
       }
       console.log(updatedEvent)
-      Api.patch(`/events/${ev._id}`, updatedEvent)
+      Api.patch(`/events/${ev._id}`, updatedEvent).catch((error) => {
+        console.log(error)
+        if (error.response) {
+          alert(
+            'failed to update, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
+      })
       this.selectedOpen = false
       this.currentlyEditing = null
     },
     updateDate(ev) {
       if (ev.start && ev.end && ev.startTime && ev.endTime) {
-        const event = {
-          name: ev.name,
-          start: ev.start + ' ' + ev.startTime,
-          end: ev.end + ' ' + ev.endTime,
-          details: ev.details,
-          color: ev.color
+        if (
+          (this.startTime > this.endTime && this.start < this.end) ||
+          (this.startTime < this.endTime && this.start <= this.end) ||
+          this.start < this.end
+        ) {
+          const event = {
+            start: ev.start + ' ' + ev.startTime,
+            end: ev.end + ' ' + ev.endTime
+          }
+          Api.patch(`/events/${ev._id}`, event).catch((error) => {
+            console.log(error)
+            if (error.response) {
+              alert(
+                'failed to update, Status code ' +
+                  error.response.status
+              )
+            } else {
+              alert('Oops something went wrong ')
+            }
+          })
+        } else {
+          alert('The event cannot end before it starts, plz check the time ;)')
         }
-        Api.put(`/events/${ev._id}`, event)
       } else {
         alert('You must enter a time and a date')
       }
     },
     async deleteEvent(ev) {
       console.log('Delete event with id' + ev)
-      Api.delete(`/events/${ev}`).then((response) => {
-        const index = this.events.findIndex((event) => event._id === ev)
-        this.events.splice(index, 1)
-      })
+      Api.delete(`/events/${ev}`)
+        .catch((error) => {
+          console.log(error)
+          if (error.response) {
+            alert(
+              'Oh no deletion failed, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong')
+          }
+        })
+        .then((response) => {
+          const index = this.events.findIndex((event) => event._id === ev)
+          this.events.splice(index, 1)
+        })
       this.selectedOpen = false
       this.getEvents()
     },
     deleteAllEvents() {
-      Api.delete('/events')
+      Api.delete('/events').catch((error) => {
+        console.log(error)
+        if (error.response) {
+          alert(
+            'Oops something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong ')
+        }
+      })
       this.getEvents()
     },
     showEvent({ nativeEvent, event }) {

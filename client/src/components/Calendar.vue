@@ -312,13 +312,21 @@ export default {
     async getEvents() {
       Api.get('/events')
         .then((response) => {
+          console.log('response')
           console.log(response.data)
           this.events = response.data
         })
         .catch((error) => {
           this.events = []
+          console.log('error')
           console.log(error)
-          alert('Oops something went wrong' + ' ' + error)
+          if (error.response) {
+            alert(
+              'Oops something went wrong, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong ')
+          }
         })
         .then(() => {
           console.log(this.events)
@@ -361,7 +369,13 @@ export default {
         }
         await Api.post('/events', event).catch((error) => {
           console.log(error)
-          alert('Oops something went wrong' + ' ' + error)
+          if (error.response) {
+            alert(
+              'Oops something went wrong, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong ')
+          }
         })
         /* await db.collection('calEvent').add({
           name: this.name,
@@ -390,7 +404,13 @@ export default {
       console.log(updatedEvent)
       Api.patch(`/events/${ev._id}`, updatedEvent).catch((error) => {
         console.log(error)
-        alert('Oops something went wrong' + ' ' + error)
+        if (error.response) {
+          alert(
+            'Oops something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong ')
+        }
       })
       this.selectedOpen = false
       this.currentlyEditing = null
@@ -403,7 +423,13 @@ export default {
         }
         Api.patch(`/events/${ev._id}`, event).catch((error) => {
           console.log(error)
-          alert('Oops something went wrong' + ' ' + error)
+          if (error.response) {
+            alert(
+              'Oops something went wrong, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong ')
+          }
         })
       } else {
         alert('You must enter a time and a date')
@@ -414,7 +440,13 @@ export default {
       Api.delete(`/events/${ev}`)
         .catch((error) => {
           console.log(error)
-          alert('Oops something went wrong' + ' ' + error)
+          if (error.response) {
+            alert(
+              'Oops something went wrong, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong ')
+          }
         })
         .then((response) => {
           const index = this.events.findIndex((event) => event._id === ev)
@@ -426,7 +458,13 @@ export default {
     deleteAllEvents() {
       Api.delete('/events').catch((error) => {
         console.log(error)
-        alert('Oops something went wrong' + ' ' + error)
+        if (error.response) {
+          alert(
+            'Oops something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong ')
+        }
       })
       this.getEvents()
     },

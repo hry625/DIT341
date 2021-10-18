@@ -322,10 +322,10 @@ export default {
           console.log(error)
           if (error.response) {
             alert(
-              'Oops something went wrong, Status code ' + error.response.status
+              'Oh no something went wrong when fetching events, Status code ' + error.response.status
             )
           } else {
-            alert('Oops something went wrong ')
+            alert('Oops something went wrong when fetching events')
           }
         })
         .then(() => {
@@ -353,6 +353,7 @@ export default {
       this.$refs.calendar.next()
     },
     async addEvent() {
+      // TODO: check if event time make sense, It cannot end before it starts.
       if (
         this.name &&
         this.start &&
@@ -360,34 +361,38 @@ export default {
         this.startTime &&
         this.endTime
       ) {
-        const event = {
-          name: this.name,
-          start: this.start + ' ' + this.startTime,
-          end: this.end + ' ' + this.endTime,
-          details: this.details,
-          color: this.color
-        }
-        await Api.post('/events', event).catch((error) => {
-          console.log(error)
-          if (error.response) {
-            alert(
-              'Oops something went wrong, Status code ' + error.response.status
-            )
-          } else {
-            alert('Oops something went wrong ')
+        console.log('start: ' + this.start + ' end: ' + this.end)
+        if (
+          (this.startTime > this.endTime && this.start < this.end) ||
+          (this.startTime < this.endTime && this.start <= this.end) ||
+          this.start < this.end
+        ) {
+          const event = {
+            name: this.name,
+            start: this.start + ' ' + this.startTime,
+            end: this.end + ' ' + this.endTime,
+            details: this.details,
+            color: this.color
           }
-        })
-        /* await db.collection('calEvent').add({
-          name: this.name,
-          details: this.details,
-          start: this.start,
-          end: this.end,
-        }) */
-        this.getEvents()
-        this.name = ''
-        this.details = ''
-        this.start = ''
-        this.end = ''
+          await Api.post('/events', event).catch((error) => {
+            console.log(error)
+            if (error.response) {
+              alert(
+                'Failed to created the event, Status code ' +
+                  error.response.status
+              )
+            } else {
+              alert('Oops something went wrong when creating the event')
+            }
+          })
+          this.getEvents()
+          this.name = ''
+          this.details = ''
+          this.start = ''
+          this.end = ''
+        } else {
+          alert('The event cannot end before it starts, plz check the time ;)')
+        }
       } else {
         alert('You must enter event name, start/end date , and start/end time')
       }
@@ -406,10 +411,10 @@ export default {
         console.log(error)
         if (error.response) {
           alert(
-            'Oops something went wrong, Status code ' + error.response.status
+            'failed to update, Status code ' + error.response.status
           )
         } else {
-          alert('Oops something went wrong ')
+          alert('Oops something went wrong')
         }
       })
       this.selectedOpen = false
@@ -417,20 +422,29 @@ export default {
     },
     updateDate(ev) {
       if (ev.start && ev.end && ev.startTime && ev.endTime) {
-        const event = {
-          start: ev.start + ' ' + ev.startTime,
-          end: ev.end + ' ' + ev.endTime
-        }
-        Api.patch(`/events/${ev._id}`, event).catch((error) => {
-          console.log(error)
-          if (error.response) {
-            alert(
-              'Oops something went wrong, Status code ' + error.response.status
-            )
-          } else {
-            alert('Oops something went wrong ')
+        if (
+          (this.startTime > this.endTime && this.start < this.end) ||
+          (this.startTime < this.endTime && this.start <= this.end) ||
+          this.start < this.end
+        ) {
+          const event = {
+            start: ev.start + ' ' + ev.startTime,
+            end: ev.end + ' ' + ev.endTime
           }
-        })
+          Api.patch(`/events/${ev._id}`, event).catch((error) => {
+            console.log(error)
+            if (error.response) {
+              alert(
+                'failed to update, Status code ' +
+                  error.response.status
+              )
+            } else {
+              alert('Oops something went wrong ')
+            }
+          })
+        } else {
+          alert('The event cannot end before it starts, plz check the time ;)')
+        }
       } else {
         alert('You must enter a time and a date')
       }
@@ -442,10 +456,10 @@ export default {
           console.log(error)
           if (error.response) {
             alert(
-              'Oops something went wrong, Status code ' + error.response.status
+              'Oh no deletion failed, Status code ' + error.response.status
             )
           } else {
-            alert('Oops something went wrong ')
+            alert('Oops something went wrong')
           }
         })
         .then((response) => {

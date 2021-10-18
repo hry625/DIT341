@@ -5,15 +5,15 @@
         <v-flex xs12 class="text-xs-center">
           <h3>Home</h3>
           <p>
-            Welcome to PlanMe! We provide an easy to use application where you
+            welcome to PlanMe! We provide an easy to use application where you
             can easily plan events with your friends
           </p>
-          <v-btn :to="Chat">Chat</v-btn>
-          <v-btn>Calendar</v-btn>
+          <v-divider></v-divider>
           <h5>Calendar</h5>
           <calendar></calendar>
+          <v-divider></v-divider>
           <h5>Select a chat to start!</h5>
-          <p>...or create a new chat</p>
+          <p>or create a new chat</p>
           <chats></chats>
         </v-flex>
       </v-layout>
@@ -39,7 +39,11 @@ h3 {
 }
 
 h5 {
-  margin-top: 80px;
+  margin-top: 70px;
+  text-transform: uppercase;
+}
+
+p::first-letter {
   text-transform: uppercase;
 }
 </style>

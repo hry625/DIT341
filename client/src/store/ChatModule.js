@@ -35,12 +35,13 @@ const ChatModule = {
         )
     },
     loadUserGroups(context) {
-      const user = context.getters.user
-      // console.log(user.id)
-      Api.get('groups', { params: { userID: user.id } }).then(
+      const userID = context.getters.user.id
+      const url = `/groups/${userID}`
+      console.log(url)
+      Api.get(url).then(
         function (res) {
           let groups = res.data
-          // console.log(groups)
+          console.log(groups)
           if (Object.keys(groups).length === 0) {
             groups = {}
           }

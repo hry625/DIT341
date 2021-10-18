@@ -87,19 +87,19 @@ const AuthModule = {
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           auth => {
+            console.log(payload.email)
             Api({
               method: 'GET',
-              url: '/users',
-              params: { email: payload.email }
+              url: `/users/${payload.email}`
             }).then((res) => {
               console.log(res.data)
               commit('setLoading', false)
               const newUser = {
                 id: auth.user.uid,
-                firstName: res.data[0].firstName,
-                lastName: res.data[0].lastName,
-                email: res.data[0].email,
-                username: res.data[0].username
+                firstName: res.data.firstName,
+                lastName: res.data.lastName,
+                email: res.data.email,
+                username: res.data.username
               }
               commit('setUser', newUser)
             }).catch(error => {

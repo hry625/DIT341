@@ -10,6 +10,32 @@ router.post('/api/groups',function(req,res,next){
         res.status(201).json(group);
     })
 })
+
+router.patch('/api/groups', function(req,res,next){
+    var group = new Group(req.body)
+    Group.findOneAndUpdate({name: group.name},{ $push: { 'groupMember': group.groupMember[0] } },{new:true}, function(err, group){
+        if (err) { return next(err); }
+        res.status(201).json(group);
+
+    }
+
+    )
+
+})
+
+
+
+
+// find user's group with user's ID
+router.get('/api/groups/:userID',function(req,res,next){
+    var user = req.params.userID
+    Group.find({'groupMember.userID':user}, function(err, group) {
+        if (err) { return next(err); }
+        console.log(group)
+        res.status(201).json(group);
+    })
+})
+
 router.get('/api/groups',function(req,res,next){
     var page = req.query.page
     var limit = parseInt(req.query.limit)
@@ -22,7 +48,7 @@ router.get('/api/groups',function(req,res,next){
 
 // find all user's group
 router.get('/api/groups',function(req,res,next){
-    Group.find( function(err, group) {
+    Group.find(function(err, group) {
         if (err) { return next(err); }
         console.log(group)
         res.status(201).json(group);
@@ -32,14 +58,6 @@ router.get('/api/groups',function(req,res,next){
 
 
 
-// find user's group with user's ID
-router.get('/api/groups',function(req,res,next){
-    var user = req.query.userID
-    Group.find({'groupMember.userID':user}, function(err, group) {
-        if (err) { return next(err); }
-        console.log(group)
-        res.status(201).json(group);
-    })
-})
+
 
 module.exports = router;

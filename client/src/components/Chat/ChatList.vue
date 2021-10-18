@@ -111,27 +111,41 @@ export default {
           that.loading = false
         })
     },
-    enterChat(chat) {
-      if (chat.isAlreadyJoined || chat.userCount == null) {
+    enterChat(group) {
+      if (group.isAlreadyJoined || group.userCount == null) {
         return
       }
-      const chatId = chat.key
+      console.log(group)
+      const groupId = group.key
       const time = new Date().valueOf()
-      const updates = {}
-      updates['/chat_members/' + chatId + '/users/' + this.user.id] = {
-        timestamp: time
+      var newGroup = {
+        name: group.name,
+        groupMember: [
+          {
+            username: this.$store.getters.user.username,
+            userID: this.$store.getters.user.id,
+            timestamp: time
+          }
+        ]
       }
-      updates['users/' + this.user.id + '/chats/' + chatId] = {
-        timestamp: time
-      }
+      Api.patch('/groups', newGroup).then(() => {
+        this.$router.push('/group/' + groupId)
+      })
+      // const updates = {}
+      // updates['/chat_members/' + chatId + '/users/' + this.user.id] = {
+      //   timestamp: time
+      // }
+      // updates['users/' + this.user.id + '/chats/' + chatId] = {
+      //   timestamp: time
+      // }
       //   const that = this
-      firebase
-        .database()
-        .ref()
-        .update(updates)
-        .then(() => {
-          this.$router.push('/chat/' + chatId)
-        })
+      // firebase
+      //   .database()
+      //   .ref()
+      //   .update(updates)
+      //   .then(() => {
+      //     this.$router.push('/chat/' + chatId)
+      //   })
     },
     onScroll() {
       if (

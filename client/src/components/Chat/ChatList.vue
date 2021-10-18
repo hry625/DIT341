@@ -57,7 +57,15 @@ export default {
   methods: {
     loadRecentChats(lastKey) {
       const that = this
-      Api.get('groups', { params: { page: 0, limit: 20 } }).then(function (
+      Api.get('groups', { params: { page: 0, limit: 20 } }).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong when loading the chats, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong when loading the chats')
+        }
+      }).then(function (
         res
       ) {
         console.log(res)
@@ -128,7 +136,15 @@ export default {
           }
         ]
       }
-      Api.patch('/groups', newGroup).then(() => {
+      Api.patch('/groups', newGroup).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong and couldnt enter group, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
+      }).then(() => {
         this.$router.push('/group/' + groupId)
       })
       // const updates = {}

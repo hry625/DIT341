@@ -147,6 +147,14 @@ export default {
         })
         .catch((error) => {
           this.message = error
+          if (error.response) {
+            alert(
+              'Oh no something went wrong when deleting user, Status code ' +
+                error.response.status
+            )
+          } else {
+            alert('Oops something went wrong when deleting user')
+          }
         })
     }
   },

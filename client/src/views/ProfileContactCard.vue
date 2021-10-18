@@ -5,32 +5,20 @@
         <v-row class="bg-img" justify="space-around">
           <v-col cols="12" class="mt-8">
             <v-card width="400">
-              <v-img
-                  height="200px"
-                  src="https://cdn.crispedge.com/f4893d.png"
-              >
-                <v-app-bar
-                    class="mt-8"
-                    flat
-                    color="rgba(0, 0, 0, 0)"
-                >
+              <v-img height="200px" src="https://cdn.crispedge.com/f4893d.png">
+                <v-app-bar class="mt-8" flat color="rgba(0, 0, 0, 0)">
                   <v-avatar size="100">
                     <img
-                        alt="user"
-                        src="http://www.reptilepage.com/assets/images/nophoto-female.jpg"
-                    >
+                      alt="user"
+                      src="http://www.reptilepage.com/assets/images/nophoto-female.jpg"
+                    />
                   </v-avatar>
 
                   <v-spacer></v-spacer>
 
                   <v-menu offset-y left>
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          color="white"
-                          icon
-                      >
+                      <v-btn v-bind="attrs" v-on="on" color="white" icon>
                         <v-icon>mdi-dots-vertical</v-icon>
                       </v-btn>
                     </template>
@@ -40,32 +28,28 @@
                       </v-list-item>
                     </v-list>
                   </v-menu>
-
                 </v-app-bar>
 
                 <v-card-title class="white--text mt-8">
                   <p class="ml-3">
-                    {{firstName +' '+ lastName}}
+                    {{ firstName + ' ' + lastName }}
                   </p>
                 </v-card-title>
               </v-img>
 
               <v-card-text>
-
-                <div class="font-weight-bold ml-8 mb-2">
-                  User Profile
-                </div>
+                <div class="font-weight-bold ml-8 mb-2">User Profile</div>
 
                 <v-list two-line>
                   <v-list-item href="#">
                     <v-list-item-icon>
-                      <v-icon color="indigo">
-                        mdi-account
-                      </v-icon>
+                      <v-icon color="indigo"> mdi-account </v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                      <v-list-item-title>{{ firstName +' '+ lastName}}</v-list-item-title>
+                      <v-list-item-title>{{
+                        firstName + ' ' + lastName
+                      }}</v-list-item-title>
                     </v-list-item-content>
                     <!-- <v-list-item-icon>
                       <v-icon>mdi-message-text</v-icon>
@@ -76,9 +60,7 @@
 
                   <v-list-item href="#">
                     <v-list-item-icon>
-                      <v-icon color="indigo">
-                        mdi-email
-                      </v-icon>
+                      <v-icon color="indigo"> mdi-email </v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content>
@@ -94,9 +76,7 @@
 
                   <v-list-item href="#">
                     <v-list-item-icon>
-                      <v-icon color="indigo">
-                        mdi-account
-                      </v-icon>
+                      <v-icon color="indigo"> mdi-account </v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content>
@@ -107,7 +87,13 @@
                       <v-icon>mdi-message-text</v-icon>
                     </v-list-item-icon> -->
                   </v-list-item>
-                  <v-btn v-on:click="Delete()" class="rounded-0" color="#000000" x-large block dark
+                  <v-btn
+                    v-on:click="Delete()"
+                    class="rounded-0"
+                    color="#000000"
+                    x-large
+                    block
+                    dark
                     >Delete account</v-btn
                   >
 
@@ -152,24 +138,39 @@ export default {
   methods: {
     getUserData() {
       Api.post('/getMyInfo', { authorization: this.jwt })
-        .then(response => {
+        .then((response) => {
           console.log(response.data)
           this.email = response.data.data.email
           this.firstName = response.data.data.firstName
           this.lastName = response.data.data.lastName
           this.username = response.data.data.username
         })
-        .catch(error => {
+        .catch((error) => {
           this.message = error
+          if (error.response) {
+            alert(
+              'Oh no something went wrong, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong')
+          }
         })
     },
     Delete() {
       Api.delete('/deleteUser', { authorization: this.jwt })
-        .then(response => {
+        .then((response) => {
           this.$router.push({ name: 'auth' })
         })
-        .catch(error => {
+        .catch((error) => {
           this.message = error
+          if (error.response) {
+            alert(
+              'Oh no something went wrong when deleting user, Status code ' +
+                error.response.status
+            )
+          } else {
+            alert('Oops something went wrong when deleting user')
+          }
         })
     }
   },
@@ -187,7 +188,7 @@ export default {
 
 <style>
 .bg-img {
-  background-image: url("https://bergen.edu/wp-content/uploads/Academic-Calendar-header.jpg");
+  background-image: url('https://bergen.edu/wp-content/uploads/Academic-Calendar-header.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center top;

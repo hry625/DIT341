@@ -48,7 +48,13 @@
         >
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items v-for="item in menuBar" v-bind:key="item.route">
+      <v-toolbar-items v-if="userIsAuthenticated" >
+        <v-btn text :key="SignOut" v-on:click="signOut">
+          <v-icon>mdi-logout</v-icon>
+          <div class="hidden-xs-only">SignOut</div>
+        </v-btn>
+      </v-toolbar-items>
+      <v-toolbar-items v-else v-for="item in items" v-bind:key="item.route">
         <v-btn text :key="item.title" :to="item.route">
           <v-icon left>{{ item.icon }}</v-icon>
           <div class="hidden-xs-only">{{ item.title }}</div>
@@ -70,20 +76,14 @@ export default {
         { icon: 'mdi-chat', title: 'Chat', route: '/chat' },
         { icon: 'mdi-calendar', title: 'Calendar', route: '/calendar' },
         { icon: 'mdi-account', title: 'Profile', route: '/profile' }
+      ],
+      items: [
+        { icon: 'mdi-account-plus', title: 'Register', route: '/register' },
+        { icon: 'mdi-lock-open', title: 'Login', route: '/login' }
       ]
     }
   },
   computed: {
-    menuBar() {
-      let items = [
-        { icon: 'mdi-account-plus', title: 'Register', route: '/register' },
-        { icon: 'mdi-lock-open', title: 'Login', route: '/login' }
-      ]
-      if (this.userIsAuthenticated) {
-        items = [{ icon: 'mdi-logout', title: 'LogOUt', route: '/' }]
-      }
-      return items
-    },
     userIsAuthenticated() {
       return (
         this.$store.getters.user !== null &&
@@ -92,6 +92,13 @@ export default {
     },
     onlineUsers() {
       return this.$store.getters.onlineUsers
+    }
+  },
+  methods: {
+    signOut() {
+      // empty
+      console.log('signout App.vue')
+      this.$store.dispatch('signOutUser')
     }
   }
 }

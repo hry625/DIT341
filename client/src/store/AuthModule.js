@@ -116,6 +116,17 @@ const AuthModule = {
             commit('setError', error)
           }
         )
+    },
+    signOutUser() {
+      console.log('signout Auth')
+      firebase.auth().signOut().then(() => {
+        // sucess
+        console.log('signed out')
+        console.log(this.state.user)
+      }).catch((error) => {
+        // an error occurred
+        console.log(error)
+      })
     }
   },
   getters: {

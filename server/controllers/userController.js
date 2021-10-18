@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var User = require("../models/user");
+var user = require("../models/user");
 var authRequiredMiddleware = require("../middlewares/authRequired");
 let calendarEventSchema = require("../models/calendarEvent");
 const jwt = require("jsonwebtoken");
@@ -15,7 +15,7 @@ router.post("/api/register", async function (req, res) {
       // password
     } = req.body;
 
-    let ifExists = await User.findOne({
+    let ifExists = await user.findOne({
       username,
     }).lean();
     if (ifExists) {
@@ -25,12 +25,7 @@ router.post("/api/register", async function (req, res) {
       });
     }
 
-
-    let userCount = function (User) {
-      return User + 1;
-    };
-
-    let newUser = new User({
+    let newUser = new user({
       firstName: firstName,
       lastName: lastName,
       email: email,
@@ -51,11 +46,12 @@ router.post("/api/register", async function (req, res) {
     });
   }
 });
+
 router.post("/api/auth", async function (req, res) {
   try {
-    let { email, password, uid } = req.body;
-    console.log(req.body);
-    let ifExists = await User.findOne({
+    let { email } = req.params;
+    
+    let ifExists = await user.findOne({
       email,
     }).lean();
 
@@ -97,6 +93,20 @@ router.post("/api/auth", async function (req, res) {
   }
 });
 
+router.delete("/api/users/:email", function (req, res, next) {
+  const email = req.params.email;
+  console.log(email);
+
+  user.findOneAndDelete({email: email}, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    console.log(user)
+    res.status(200).json({ message: "Successfully deleted " });
+  });
+});
+
+
 router.get(
   "/api/getMyInfo*",
   // authRequiredMiddleware,
@@ -105,7 +115,7 @@ router.get(
       console.log(req.user);
       // let id = req.user._id;
       const email = req.query.email;
-      let data = await User.findOne(
+      let data = await user.findOne(
         {
           email: email,
         },
@@ -128,6 +138,28 @@ router.get(
     }
   }
 );
+//edit user 
+router.put("/api/users/:email", function (req, res, next) {
+  const email = req.params.email;
+  // console.log(req.body)
+  user.findOneAndUpdate(email, req.body, (err, user) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).json(user);
+  });
+});
+
+router.patch("/api/users/:email", function (req, res, next) {
+  var email = req.params.email;
+  user.findByIdAndUpdate(email, req.body, { new: true }, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    res.status(201).json(user);
+  });
+});
+
 router.post(
   "/api/getMyPlan",
   authRequiredMiddleware,
@@ -361,11 +393,11 @@ router.post(
       });
     }
   }
-)
+);
 
 // find all users
 router.get("/api/users", function (req, res, next) {
-  User.find(function (err, user) {
+  user.find(function (err, user) {
     if (err) {
       return next(err);
     }
@@ -375,15 +407,16 @@ router.get("/api/users", function (req, res, next) {
 });
 
 // find userEmail
-router.get('/api/users', function(req, res, next) {
-  var email = req.query.email;
-  User.find({email}, function(err, user) {
-      if (err) { return next(err); }
-      console.log(user)
-      res.status(201).json(user);
-  })
-})
-
+router.get("/api/user/:email", function (req, res, next) {
+  var {email} = req.params;
+  user.find({ email }, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    console.log(user);
+    res.status(201).json(user);
+  });
+});
 
 // router.get('/api/users', function(req, res, next) {
 //   var attribute = req.body;
@@ -393,7 +426,5 @@ router.get('/api/users', function(req, res, next) {
 //       console.log(user);
 //   })
 // })
-
-
 
 module.exports = router;

@@ -319,7 +319,7 @@ export default {
     }
   },
   methods: {
-    async getEvents() {
+    getEvents() {
       Api.get('/events', {
         params: { usernames: this.$store.getters.currentGroupUser },
         paramsSerializer: (params) => {
@@ -368,7 +368,7 @@ export default {
     next() {
       this.$refs.calendar.next()
     },
-    async addEvent() {
+    addEvent() {
       // TODO: check if event time make sense, It cannot end before it starts.
       if (
         this.name &&
@@ -399,7 +399,7 @@ export default {
             color: this.color,
             invitees: invitees
           }
-          await Api.post('/events', event)
+          Api.post('/events', event)
             .then(this.$store.dispatch('clearSelectedUsers'))
             .catch((error) => {
               console.log(error)
@@ -427,7 +427,7 @@ export default {
     editEvent(ev) {
       this.currentlyEditing = ev._id
     },
-    async updateEvent(ev) {
+    updateEvent(ev) {
       const updatedEvent = {
         name: ev.name,
         details: ev.details,
@@ -471,7 +471,7 @@ export default {
         alert('You must enter a time and a date')
       }
     },
-    async deleteEvent(ev) {
+    deleteEvent(ev) {
       console.log('Delete event with id' + ev)
       Api.delete(`/events/${ev}`)
         .catch((error) => {

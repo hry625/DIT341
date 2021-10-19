@@ -47,6 +47,7 @@ export default {
     this.$store.commit('setGroupID', this.id)
     this.$store.dispatch('loadGroupUser')
     this.$store.dispatch('loadOnlineUsers')
+    this.$store.dispatch('')
   },
   components: {
     message: Message,

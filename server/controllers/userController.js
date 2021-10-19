@@ -108,11 +108,12 @@ router.delete("/api/users", function (req, res, next) {
 //edit user 
 router.put("/api/users/:email", function (req, res, next) {
   const email = req.params.email;
-  // console.log(req.body)
-  User.findOneAndUpdate(email, req.body, (err, user) => {
+  console.log(email)
+  User.findOneAndUpdate({email:email}, req.body, (err, user) => {
     if (err) {
       return next(err);
     }
+    console.log(user)
     res.status(200).json(user);
   });
 });
@@ -132,7 +133,7 @@ router.patch("/api/users/:email", function (req, res, next) {
 // find userEmail
 router.get('/api/users/:email', function(req, res, next) {
   var email = req.params.email;
-  user.findOne({email}, function(err, user) {
+  User.findOne({email}, function(err, user) {
       if (err) { return next(err); }
       console.log(user)
       res.status(201).json(user);

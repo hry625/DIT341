@@ -135,6 +135,7 @@ const AuthModule = {
         // sucess
         console.log('signed out')
         location.reload()
+        this.$router.push('/login')
       }).catch((error) => {
         // an error occurred
         console.log(error)
@@ -144,8 +145,7 @@ const AuthModule = {
       commit('setLoading', true)
       Api({
         method: 'PUT',
-        url: '/users/:email',
-        params: { email: user.email },
+        url: `/users/${user.email}`,
         data: user
       })
         .then(res => {

@@ -42,9 +42,9 @@
                 <div class="font-weight-bold ml-8 mb-2">User Profile</div>
                 <v-list two-line>
                   <v-list-item href="#">
-                    <v-list-item-icon>
-                      <v-icon color="indigo"> mdi-account </v-icon>
-                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-body-1 color="indigo"> First Name: </v-body-1>
+                    </v-list-item-content>
 
                     <v-list-item-content>
                       <input v-model="firstName" />
@@ -58,18 +58,23 @@
                   </v-list-item>
 
                   <v-divider inset></v-divider>
-
                   <v-list-item href="#">
-                    <v-list-item-icon>
-                      <v-icon color="indigo"> mdi-account </v-icon>
-                    </v-list-item-icon>
-
+                    <v-list-item-content>
+                      <v-body-1 color="indigo"> Last Name: </v-body-1>
+                    </v-list-item-content>
                     <v-list-item-content>
                       <input v-model="lastName" />
-                      <!-- <v-list-item-title>{{
-                        firstName + ' ' + lastName
-                      }}</v-list-item-title> -->
                     </v-list-item-content>
+                  </v-list-item>
+                  <v-divider inset></v-divider>
+                  <v-list-item href="#">
+                    <v-list-item-content>
+                      <v-body-1 color="indigo"> Username: </v-body-1>
+                    </v-list-item-content>
+                    <v-list-item-content>
+                      <input v-model="username" />
+                    </v-list-item-content>
+
                     <!-- <v-list-item-icon>
                       <v-icon>mdi-message-text</v-icon>
                     </v-list-item-icon> -->
@@ -86,28 +91,8 @@
                       <input v-model="email" />
                       <!-- <v-list-item-title>{{ email }}</v-list-item-title> -->
                     </v-list-item-content>
-
-                    <!-- <v-list-item-icon>
-                      <v-icon>mdi-message-text</v-icon>
-                    </v-list-item-icon> -->
                   </v-list-item>
 
-                  <v-divider inset></v-divider>
-
-                  <v-list-item href="#">
-                    <v-list-item-icon>
-                      <v-icon color="indigo"> mdi-account </v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                      <input v-model="username" />
-                      <!-- <v-list-item-title>{{ username }}</v-list-item-title> -->
-                    </v-list-item-content>
-
-                    <!-- <v-list-item-icon>
-                      <v-icon>mdi-message-text</v-icon>
-                    </v-list-item-icon> -->
-                  </v-list-item>
                   <v-btn @click="Delete()" class="user-button" color="red"
                     >Delete account</v-btn
                   >

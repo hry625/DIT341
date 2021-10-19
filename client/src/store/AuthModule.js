@@ -122,7 +122,7 @@ const AuthModule = {
       firebase.auth().signOut().then(() => {
         // sucess
         console.log('signed out')
-        console.log(this.state.user)
+        location.reload()
       }).catch((error) => {
         // an error occurred
         console.log(error)

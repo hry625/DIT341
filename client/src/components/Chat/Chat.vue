@@ -1,10 +1,13 @@
 <template>
   <v-container fluid style="padding: 0">
     <v-row no-gutters>
+      <v-col sm="5" class="scrollable">
+        <group-calendar></group-calendar>
+      </v-col>
       <v-col sm="2" class="scrollable">
         <chats></chats>
       </v-col>
-      <v-col sm="10" style="position: relative">
+      <v-col sm="5" style="position: relative">
         <div class="chat-container" v-on:scroll="onScroll" ref="chatContainer">
           <message :messages="messages" @imageLoad="scrollToEnd"></message>
         </div>
@@ -33,6 +36,7 @@
 import Message from './parts/Message.vue'
 import EmojiPicker from './parts/EmojiPicker.vue'
 import Chats from './parts/Chats.vue'
+import Calendar from '../Calendar.vue'
 import firebase from 'firebase/compat/app'
 import { Api } from '../../Api'
 export default {
@@ -41,7 +45,8 @@ export default {
       content: '',
       chatMessages: [],
       emojiPanel: false,
-      currentRef: {},
+      messageRef: {},
+      calendarRef: {},
       loading: false,
       totalChatHeight: 0
     }
@@ -49,12 +54,14 @@ export default {
   props: ['id'],
   mounted() {
     this.loadChat()
+    this.$store.commit('setGroupID', this.id)
     this.$store.dispatch('loadOnlineUsers')
   },
   components: {
     message: Message,
     'emoji-picker': EmojiPicker,
-    chats: Chats
+    chats: Chats,
+    groupCalendar: Calendar
   },
   computed: {
     messages() {
@@ -71,7 +78,7 @@ export default {
         var urlPattern =
           /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
         /* eslint-enable */
-        var url = '/message/' + groupkey
+        var url = '/messages/' + groupkey
         Api.get(url)
           .then(function (res) {
             var msgs = []
@@ -146,8 +153,9 @@ export default {
   },
   watch: {
     '$route.params.id'(newId, oldId) {
-      this.currentRef.off('value', this.onNewMessageAdded)
+      this.messageRef.off('value', this.onNewMessageAdded)
       this.loadChat()
+      this.$store.commit('setGroupID', this.id)
     }
   },
   updat: {},
@@ -158,12 +166,12 @@ export default {
       if (this.id !== undefined) {
         this.chatMessages = []
         const groupID = this.id
-        this.currentRef = firebase
+        this.messageRef = firebase
           .database()
           .ref('group')
           .child(groupID)
           .child('messageCount')
-        this.currentRef.on('value', this.onNewMessageAdded)
+        this.messageRef.on('value', this.onNewMessageAdded)
       }
     },
     onScroll() {

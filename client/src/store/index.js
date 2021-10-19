@@ -15,7 +15,9 @@ export const store = new Vuex.Store({
   state: {
     loading: false,
     error: null,
-    onlineUsers: []
+    onlineUsers: [],
+    currentGroupID: null,
+    selectedUsers: []
   },
   mutations: {
     setLoading(state, payload) {
@@ -29,6 +31,13 @@ export const store = new Vuex.Store({
     },
     setOnlineUsers(state, payload) {
       state.onlineUsers = payload
+    },
+    setGroupID(state, payload) {
+      console.log(payload)
+      state.currentGroupID = payload
+    },
+    setSelectedUser(state, payload) {
+      state.selectedUsers = payload
     }
   },
   actions: {
@@ -42,6 +51,9 @@ export const store = new Vuex.Store({
     },
     clearError({ commit }) {
       commit('clearError')
+    },
+    clearSelectedUsers({ commit }) {
+      this.state.selectedUsers = []
     }
   },
   getters: {
@@ -53,6 +65,13 @@ export const store = new Vuex.Store({
     },
     onlineUsers(state) {
       return state.onlineUsers
+    },
+    groupID(state) {
+      return state.currentGroupID
+    },
+    selectedUsers(state) {
+      return state.selectedUsers
     }
+
   }
 })

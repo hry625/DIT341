@@ -14,7 +14,7 @@ const ChatModule = {
   actions: {
     sendMessage(context, payload) {
       const groupID = payload.groupID
-      const url = '/message/' + groupID
+      const url = '/messages/' + groupID
       const message = {
         username: payload.username,
         content: payload.content,
@@ -44,9 +44,9 @@ const ChatModule = {
     },
     loadUserGroups(context) {
       const userID = context.getters.user.id
-      const url = `/groups/${userID}`
-      console.log(url)
-      Api.get(url).then(
+      // const url = `/groups/${userID}`
+      // console.log(url)
+      Api.get('groups', { params: { userID: userID } }).then(
         function (res) {
           let groups = res.data
           console.log(groups)

@@ -79,6 +79,7 @@
                 type="time"
                 label="end time"
               ></v-text-field>
+              <invitees-picker></invitees-picker>
               <v-text-field
                 v-model="color"
                 type="color"
@@ -156,6 +157,7 @@
                   type="text"
                   label="details"
                 ></v-text-field>
+                <invitees-picker></invitees-picker>
                 <v-text-field
                   v-model="selectedEvent.color"
                   type="color"
@@ -245,6 +247,7 @@
 </template>
 
 <script>
+import InviteesPicker from './InviteePicker.vue'
 import { Api } from '@/Api'
 export default {
   data: () => ({
@@ -257,6 +260,7 @@ export default {
       day: 'Day',
       '4day': '4 Days'
     },
+    groupID: null,
     name: null,
     startTime: null,
     endTime: null,
@@ -273,7 +277,11 @@ export default {
     editDialog: false,
     editDateDialog: false
   }),
+  components: {
+    inviteesPicker: InviteesPicker
+  },
   mounted() {
+    this.groupID = this.$store.getters.groupID
     this.getEvents()
   },
   computed: {
@@ -290,6 +298,7 @@ export default {
       const suffixYear = startYear === endYear ? '' : endYear
       const startDay = start.day + this.nth(start.day)
       const endDay = end.day + this.nth(end.day)
+      console.log(this.groupID)
       switch (this.type) {
         case 'month':
           return `${startMonth} ${startYear}`
@@ -322,7 +331,8 @@ export default {
           console.log(error)
           if (error.response) {
             alert(
-              'Oh no something went wrong when fetching events, Status code ' + error.response.status
+              'Oh no something went wrong when fetching events, Status code ' +
+                error.response.status
             )
           } else {
             alert('Oops something went wrong when fetching events')
@@ -367,24 +377,35 @@ export default {
           (this.startTime < this.endTime && this.start <= this.end) ||
           this.start < this.end
         ) {
+          const invitees = []
+          const nameList = this.$store.getters.selectedUsers
+          for (const user in nameList) {
+            var invitee = {}
+            invitee.name = nameList[user]
+            invitees.push(invitee)
+          }
           const event = {
             name: this.name,
+            groupID: this.groupID,
             start: this.start + ' ' + this.startTime,
             end: this.end + ' ' + this.endTime,
             details: this.details,
-            color: this.color
+            color: this.color,
+            invitees: invitees
           }
-          await Api.post('/events', event).catch((error) => {
-            console.log(error)
-            if (error.response) {
-              alert(
-                'Failed to created the event, Status code ' +
-                  error.response.status
-              )
-            } else {
-              alert('Oops something went wrong when creating the event')
-            }
-          })
+          await Api.post('/events', event)
+            .then(this.$store.dispatch('clearSelectedUsers'))
+            .catch((error) => {
+              console.log(error)
+              if (error.response) {
+                alert(
+                  'Failed to created the event, Status code ' +
+                    error.response.status
+                )
+              } else {
+                alert('Oops something went wrong when creating the event')
+              }
+            })
           this.getEvents()
           this.name = ''
           this.details = ''
@@ -410,9 +431,7 @@ export default {
       Api.patch(`/events/${ev._id}`, updatedEvent).catch((error) => {
         console.log(error)
         if (error.response) {
-          alert(
-            'failed to update, Status code ' + error.response.status
-          )
+          alert('failed to update, Status code ' + error.response.status)
         } else {
           alert('Oops something went wrong')
         }
@@ -434,10 +453,7 @@ export default {
           Api.patch(`/events/${ev._id}`, event).catch((error) => {
             console.log(error)
             if (error.response) {
-              alert(
-                'failed to update, Status code ' +
-                  error.response.status
-              )
+              alert('failed to update, Status code ' + error.response.status)
             } else {
               alert('Oops something went wrong ')
             }
@@ -455,9 +471,7 @@ export default {
         .catch((error) => {
           console.log(error)
           if (error.response) {
-            alert(
-              'Oh no deletion failed, Status code ' + error.response.status
-            )
+            alert('Oh no deletion failed, Status code ' + error.response.status)
           } else {
             alert('Oops something went wrong')
           }

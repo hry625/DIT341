@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Message = require('../models/message');
 
-router.post('/api/message/:groupID',function(req,res,next){
+router.post('/api/messages/:groupID',function(req,res,next){
     var gID = req.params.groupID
     var content = {
         username: req.body.username,
@@ -33,7 +33,7 @@ router.post('/api/message/:groupID',function(req,res,next){
 
 })
 
-router.get('/api/message/:groupID',function(req,res,next){
+router.get('/api/messages/:groupID',function(req,res,next){
     Message.find({groupID: req.params.groupID}, function(err, message){
         if (err){return next(err)}
         console.log(message)

@@ -10,7 +10,7 @@ router.post('/api/groups',function(req,res,next){
         res.status(201).json(group);
     })
 })
-// TODO:update to /api/groups/:groupID/groupMember
+// TODO:update to post /api/groups/:groupID/groupMember
 router.put('/api/groups', function(req,res,next){
     var group = new Group(req.body)
     Group.findOneAndUpdate({name: group.name},{ $push: { 'groupMember': group.groupMember[0] } },{new:true}, function(err, group){

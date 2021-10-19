@@ -65,19 +65,22 @@ The system allows the users to organize their time and share their schedule with
 
 ### Pages
 
-* Login: user can log in by email and password
-* Signup: user can sign up 
-* Home: My Calendar, search for events/friends and links to other pages
-* My groups(Group Calendar, Chat )
-* Profile: View and change user details.
-* inbox: 
-* About us:
+| Page | About |
+| ------ | ------ |
+| Login | Here user can log in using email and password |
+| Signup | User can register and create an account |
+| Home | Usr can view calendar and use it. They can also view the chats they have entered |
+| Chats | User can view their chats, create a new chat or join exixting chats |
+| Calendar | User can view events, create, update and delete events. |
+| Profile | User can view and update their information and delete their account |
+| Group/:id | User can chat with other users in the group |
 
 ### Entity-Relationship (ER) Diagram
 
 ![ER Diagram](./images/er_diagram.png)
 
-Each user has exactly one calendar and can belong to one or multiple groups. Each Calendar have one or many timeslots. A timeslot has a title, description, status, id, date and time. Each timeslot also has a list of invitees who are other users on the app. When a user belongs to a group they can send messages to other group members. 
+Each user has exactly one calendar and can belong to one or multiple groups. Each Calendar have one or many events. A timeslot has a title, description, status, id, date and time. Each timeslot also has a list of invitees who are other users on the app. When a user belongs to a group they can send messages to other group members. 
+
 ## Teaser (MS3)
 
 ![Teaser](./images/teaser.png)

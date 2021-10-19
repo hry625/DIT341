@@ -11,11 +11,6 @@
         <div class="chat-container" v-on:scroll="onScroll" ref="chatContainer">
           <message :messages="messages" @imageLoad="scrollToEnd"></message>
         </div>
-        <emoji-picker
-          :show="emojiPanel"
-          @close="toggleEmojiPanel"
-          @click="addEmojiToMessage"
-        ></emoji-picker>
         <div class="typer">
           <input
             type="text"
@@ -23,9 +18,6 @@
             v-on:keyup.enter="sendMessage"
             v-model="content"
           />
-          <v-btn icon class="blue--text emoji-panel" @click="toggleEmojiPanel">
-            <v-icon>mdi-emoticon-outline</v-icon>
-          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -34,7 +26,6 @@
 
 <script>
 import Message from './parts/Message.vue'
-import EmojiPicker from './parts/EmojiPicker.vue'
 import Chats from './parts/Chats.vue'
 import Calendar from '../Calendar.vue'
 import firebase from 'firebase/compat/app'
@@ -44,7 +35,6 @@ export default {
     return {
       content: '',
       chatMessages: [],
-      emojiPanel: false,
       messageRef: {},
       calendarRef: {},
       loading: false,
@@ -60,7 +50,6 @@ export default {
   },
   components: {
     message: Message,
-    'emoji-picker': EmojiPicker,
     chats: Chats,
     groupCalendar: Calendar
   },
@@ -217,14 +206,6 @@ export default {
       if (imageRegex.test(message.content)) {
         message.image = imageRegex.exec(message.content)[0]
       }
-      const emojiRegex =
-        /([\u{1f300}-\u{1f5ff}\u{1f900}-\u{1f9ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{1f1e6}-\u{1f1ff}\u{1f191}-\u{1f251}\u{2934}-\u{1f18e}])/gu
-      if (emojiRegex.test(message.content)) {
-        message.content = message.content.replace(
-          emojiRegex,
-          '<span class="emoji">$1</span>'
-        )
-      }
       return message
     },
     sendMessage() {
@@ -257,12 +238,6 @@ export default {
       //   const container = this.$el.querySelector('.chat-container')
       //   container.scrollTop = difference
       // })
-    },
-    addEmojiToMessage(emoji) {
-      this.content += emoji.value
-    },
-    toggleEmojiPanel() {
-      this.emojiPanel = !this.emojiPanel
     }
   }
 }

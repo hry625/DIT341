@@ -33,7 +33,7 @@ router.post("/api/users", async function (req, res) {
     //   return User + 1;
     // };
 
-    let newUser = new User({
+    let newUser = new user({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -104,6 +104,7 @@ router.delete("/api/users", function (req, res, next) {
 });
 
 
+
 //edit user 
 router.put("/api/users/:email", function (req, res, next) {
   const email = req.params.email;
@@ -115,6 +116,7 @@ router.put("/api/users/:email", function (req, res, next) {
     res.status(200).json(user);
   });
 });
+
 
 //edit partially user
 router.patch("/api/users/:email", function (req, res, next) {
@@ -130,7 +132,7 @@ router.patch("/api/users/:email", function (req, res, next) {
 // find userEmail
 router.get('/api/users/:email', function(req, res, next) {
   var email = req.params.email;
-  User.findOne({email}, function(err, user) {
+  user.findOne({email}, function(err, user) {
       if (err) { return next(err); }
       console.log(user)
       res.status(201).json(user);

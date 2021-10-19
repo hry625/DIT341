@@ -22,7 +22,7 @@ const AuthModule = {
             myUserRef.onDisconnect().remove()
             // set user's online status
             const presenceObject = {
-              username: payload.username,
+              username: payload ? payload.username : 'not user',
               status: 'online'
             }
             myUserRef.set(presenceObject)
@@ -50,7 +50,7 @@ const AuthModule = {
               lastName: payload.lastName,
               email: payload.email
             }
-            Api.post('/register', data)
+            Api.post('/users', data)
             firebase.database().ref('users').child(auth.user.uid).set({
               username: payload.username,
               firstName: payload.firstName,
@@ -139,6 +139,24 @@ const AuthModule = {
         // an error occurred
         console.log(error)
       })
+    },
+    editUser({ commit }, user) {
+      commit('setLoading', true)
+      Api({
+        method: 'PUT',
+        url: '/users/:email',
+        params: { email: user.email },
+        data: user
+      })
+        .then(res => {
+          console.log(res.data)
+          commit('setLoading', false)
+          commit('setUser', res.data)
+        })
+        .catch(error => {
+          commit('setLoading', false)
+          commit('setError', error)
+        })
     }
   },
   getters: {

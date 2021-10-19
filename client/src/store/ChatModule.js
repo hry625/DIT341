@@ -20,7 +20,15 @@ const ChatModule = {
         content: payload.content,
         timestamp: payload.date
       }
-      Api.post(url, message)
+      Api.post(url, message).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
+      })
       firebase.database().ref().child('group').child(groupID).child('messageCount').set(firebase.database.ServerValue.increment(1))
       // .child(groupID).child('count').update(firebase.database.ServerValue.increment(1))
       //   .catch((error) => {
@@ -55,7 +63,15 @@ const ChatModule = {
           }
           // console.log(groupList)
         }
-      )
+      ).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
+      })
 
       // firebase.database().ref('users').child(user.id).child('chats').orderByChild('timestamp').once('value', function (snapshot) {
       //   let chats = snapshot.val()

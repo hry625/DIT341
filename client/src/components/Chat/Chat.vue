@@ -72,36 +72,47 @@ export default {
           /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
         /* eslint-enable */
         var url = '/message/' + groupkey
-        Api.get(url).then(function (res) {
-          var msgs = []
-          msgs = res.data[0].messages
-          that.chatMessages = []
-          for (const index in msgs) {
-            const message = {}
-            message.key = msgs[index]._id
-            message.content = msgs[index].content
-            message.content = message.content
-              .replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#039;')
-            message.content = message.content.replace(
-              urlPattern,
-              "<a href='$1'>$1</a>"
-            )
-            message.user = msgs[index].username
-            message.timestamp = msgs[index].timestamp
-            console.log('in the for loop')
-            if (!newMessage) {
-              that.chatMessages.push(that.processMessage(message))
-              that.scrollToEnd()
-            } else {
-              that.chatMessages.unshift(that.processMessage(message))
-              that.scrollTo()
+        Api.get(url)
+          .then(function (res) {
+            var msgs = []
+            msgs = res.data[0].messages
+            that.chatMessages = []
+            for (const index in msgs) {
+              const message = {}
+              message.key = msgs[index]._id
+              message.content = msgs[index].content
+              message.content = message.content
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+              message.content = message.content.replace(
+                urlPattern,
+                "<a href='$1'>$1</a>"
+              )
+              message.user = msgs[index].username
+              message.timestamp = msgs[index].timestamp
+              console.log('in the for loop')
+              if (!newMessage) {
+                that.chatMessages.push(that.processMessage(message))
+                that.scrollToEnd()
+              } else {
+                that.chatMessages.unshift(that.processMessage(message))
+                that.scrollTo()
+              }
             }
-          }
-        })
+          })
+          .catch((error) => {
+            if (error.response) {
+              alert(
+                'Oh no something went wrong, Status code ' +
+                  error.response.status
+              )
+            } else {
+              alert('Oops something went wrong')
+            }
+          })
         // const onNewMessageAdded = function (snapshot, newMessage = true) {
         //   const message = snapshot.val()
         //   message.key = snapshot.key

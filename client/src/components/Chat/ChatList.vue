@@ -146,6 +146,14 @@ export default {
         }
       }).then(() => {
         this.$router.push('/group/' + groupId)
+      }).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
       })
       // const updates = {}
       // updates['/chat_members/' + chatId + '/users/' + this.user.id] = {

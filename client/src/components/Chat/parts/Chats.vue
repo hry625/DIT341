@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-list>
-      <v-list-title>My chats</v-list-title>
+      <v-subheader>MY CHATS</v-subheader>
       <v-list-item
         avatar
         v-for="group in chats"

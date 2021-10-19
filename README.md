@@ -77,6 +77,7 @@ The system allows the users to organize their time and share their schedule with
 
 ![ER Diagram](./images/er_diagram.png)
 
+Each user has exactly one calendar and can belong to one or multiple groups. Each Calendar have one or many timeslots. A timeslot has a title, description, status, id, date and time. Each timeslot also has a list of invitees who are other users on the app. When a user belongs to a group they can send messages to other group members. 
 ## Teaser (MS3)
 
 ![Teaser](./images/teaser.png)

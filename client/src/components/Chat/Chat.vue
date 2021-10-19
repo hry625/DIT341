@@ -1,18 +1,16 @@
 <template>
   <v-container fluid style="padding: 0">
     <v-row no-gutters>
+      <v-col sm="5" class="scrollable">
+        <group-calendar></group-calendar>
+      </v-col>
       <v-col sm="2" class="scrollable">
         <chats></chats>
       </v-col>
-      <v-col sm="10" style="position: relative">
+      <v-col sm="5" style="position: relative">
         <div class="chat-container" v-on:scroll="onScroll" ref="chatContainer">
           <message :messages="messages" @imageLoad="scrollToEnd"></message>
         </div>
-        <emoji-picker
-          :show="emojiPanel"
-          @close="toggleEmojiPanel"
-          @click="addEmojiToMessage"
-        ></emoji-picker>
         <div class="typer">
           <input
             type="text"
@@ -20,9 +18,6 @@
             v-on:keyup.enter="sendMessage"
             v-model="content"
           />
-          <v-btn icon class="blue--text emoji-panel" @click="toggleEmojiPanel">
-            <v-icon>mdi-emoticon-outline</v-icon>
-          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -31,8 +26,8 @@
 
 <script>
 import Message from './parts/Message.vue'
-import EmojiPicker from './parts/EmojiPicker.vue'
 import Chats from './parts/Chats.vue'
+import Calendar from '../Calendar.vue'
 import firebase from 'firebase/compat/app'
 import { Api } from '../../Api'
 export default {
@@ -40,8 +35,8 @@ export default {
     return {
       content: '',
       chatMessages: [],
-      emojiPanel: false,
-      currentRef: {},
+      messageRef: {},
+      calendarRef: {},
       loading: false,
       totalChatHeight: 0
     }
@@ -49,12 +44,15 @@ export default {
   props: ['id'],
   mounted() {
     this.loadChat()
+    this.$store.commit('setGroupID', this.id)
+    this.$store.dispatch('loadGroupUser')
     this.$store.dispatch('loadOnlineUsers')
+    this.$store.dispatch('')
   },
   components: {
     message: Message,
-    'emoji-picker': EmojiPicker,
-    chats: Chats
+    chats: Chats,
+    groupCalendar: Calendar
   },
   computed: {
     messages() {
@@ -71,7 +69,7 @@ export default {
         var urlPattern =
           /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
         /* eslint-enable */
-        var url = '/message/' + groupkey
+        var url = '/messages/' + groupkey
         Api.get(url)
           .then(function (res) {
             var msgs = []
@@ -146,8 +144,9 @@ export default {
   },
   watch: {
     '$route.params.id'(newId, oldId) {
-      this.currentRef.off('value', this.onNewMessageAdded)
+      this.messageRef.off('value', this.onNewMessageAdded)
       this.loadChat()
+      this.$store.commit('setGroupID', this.id)
     }
   },
   updat: {},
@@ -158,12 +157,12 @@ export default {
       if (this.id !== undefined) {
         this.chatMessages = []
         const groupID = this.id
-        this.currentRef = firebase
+        this.messageRef = firebase
           .database()
           .ref('group')
           .child(groupID)
           .child('messageCount')
-        this.currentRef.on('value', this.onNewMessageAdded)
+        this.messageRef.on('value', this.onNewMessageAdded)
       }
     },
     onScroll() {
@@ -208,14 +207,6 @@ export default {
       if (imageRegex.test(message.content)) {
         message.image = imageRegex.exec(message.content)[0]
       }
-      const emojiRegex =
-        /([\u{1f300}-\u{1f5ff}\u{1f900}-\u{1f9ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{1f1e6}-\u{1f1ff}\u{1f191}-\u{1f251}\u{2934}-\u{1f18e}])/gu
-      if (emojiRegex.test(message.content)) {
-        message.content = message.content.replace(
-          emojiRegex,
-          '<span class="emoji">$1</span>'
-        )
-      }
       return message
     },
     sendMessage() {
@@ -248,12 +239,6 @@ export default {
       //   const container = this.$el.querySelector('.chat-container')
       //   container.scrollTop = difference
       // })
-    },
-    addEmojiToMessage(emoji) {
-      this.content += emoji.value
-    },
-    toggleEmojiPanel() {
-      this.emojiPanel = !this.emojiPanel
     }
   }
 }

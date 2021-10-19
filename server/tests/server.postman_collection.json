@@ -15,47 +15,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"eventID1\", jsonData._id);\r",
-									"\r",
-									"pm.test('status code is 201', function () {\r",
+									"pm.test('status code is 201', function(){\r",
 									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.have.status(\"Created\");\r",
-									"\r",
-									"})\r",
-									"pm.test('Response should be JSON', function () {\r",
-									"    pm.response.to.be.json;\r",
-									"    //also checks if there is a body\r",
-									"    pm.response.to.not.be.error;\r",
-									"})\r",
-									"\r",
-									"pm.test('Correct JSON schema', function () {\r",
-									"    const schema = {\r",
-									"     \"properties\": {\r",
-									"            \"details\": { \"type\": \"string\" },\r",
-									"            \"start\": { \"type\": \"string\" },\r",
-									"            \"end\": { \"type\": \"string\" },\r",
-									"            \"name\": { \"type\": \"string\" },\r",
-									"            \"color\": { \"type\": \"string\" },\r",
-									"            \"invitees\": { \"type\": \"array\" }\r",
-									"        }\r",
-									"\r",
-									"    }\r",
-									"    pm.response.to.have.jsonSchema(schema);\r",
-									"\r",
-									"})\r",
-									"\r",
-									"pm.test('Json has correct data', function () {\r",
-									"    const responseJson = pm.response.json();\r",
-									"    pm.expect(responseJson).to.be.an(\"object\");\r",
-									"    pm.expect(responseJson.name).to.be.a(\"string\");\r",
-									"    pm.expect(responseJson.details).to.be.a(\"string\");\r",
-									"    pm.expect(responseJson.invitees).to.be.an(\"array\");\r",
-									"    //How do you assert time and id? \r",
-									"\r",
-									"    //pm.expect(responseJson.title).to.eql('Event');\r",
-									"    //pm.expect(responseJson.description).to.eql('description');\r",
-									"\r",
 									"})"
 								],
 								"type": "text/javascript"
@@ -64,30 +25,20 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"details\" : \"details\",\r\n    \"start\" : \"2021-09-12 16:00\",\r\n    \"end\" : \"2021-09-12 18:00\",\r\n    \"name\" : \"event 1\",\r\n    \"color\" : \"#089933\",\r\n    \"invitees\" : [{\"name\" : \"Anna\" , \"status\" : \"invited\"}]\r\n\r\n}"
+							"raw": "{\r\n    \"description\" : \"description\",\r\n    \"time\" : \"2014-01-02T23:28:56.782Z\",\r\n    \"title\" : \"event\",\r\n    \"invitees\" : [{\"name\" : \"Hanna\" , \"status\" : \"invited\"}]\r\n\r\n}"
 						},
 						"url": {
-							"raw": "{{host}}/api/events",
+							"raw": "{{host}}/api/events/",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"events"
+								"events",
+								""
 							]
 						}
 					},
@@ -240,6 +191,78 @@
 				},
 				{
 					"name": "Get an event by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code', function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"})\r",
+									"\r",
+									"pm.test('Correct JSON schema', function(){\r",
+									"    const schema = {\r",
+									"     \"properties\": {\r",
+									"            \"details\": { \"type\": \"string\" },\r",
+									"            \"start\": { \"type\": \"string\" },\r",
+									"            \"end\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"color\": { \"type\": \"string\" },\r",
+									"            \"invitees\": { \"type\": \"array\" }\r",
+									"        }\r",
+									"       \r",
+									"    }\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/events/:eventID",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"events",
+								":eventID"
+							],
+							"variable": [
+								{
+									"key": "eventID",
+									"value": "{{eventID1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get events by groupID",
 					"event": [
 						{
 							"listen": "test",
@@ -738,6 +761,117 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "{{host}}/api/events",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"event\",\r\n    \"start\" : \"2021-10-07 12:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/events",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "\"event\"",
+									"disabled": true
+								},
+								{
+									"key": "start",
+									"value": "\"2021-10-07 12:00\"",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "\"event\"",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "\"time\"",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find events with matched users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usernames[0]",
+									"value": "'test2'",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "usernames[1]",
+									"value": "'test3'",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/events?usernames=test4&usernames=newTest",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "usernames",
+									"value": "[\"test4\",\"newTester\"]",
+									"disabled": true
+								},
+								{
+									"key": "usernames",
+									"value": "test4"
+								},
+								{
+									"key": "usernames",
+									"value": "newTest"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -800,7 +934,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\" : \"Matt\",\r\n    \"lastName\" : \"Larsson\",\r\n    \"email\" : \"matt@gmail.com\",\r\n    \"username\" : \"maaaaat\"\r\n}"
+							"raw": "{\r\n    \"firstName\" : \"Matt\",\r\n    \"lastName\" : \"Larsson\",\r\n    \"email\" : \"matt@gmail.com\",\r\n    \"username\" : \"maaaaat\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{host}}/api/users",
@@ -887,7 +1026,51 @@
 					"response": []
 				},
 				{
-					"name": "Get user by ID",
+					"name": "Get user by email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status code is 201', function(){\r",
+									"    pm.response.to.have.status(201);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/users?email=test2@gmail.com",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "test2@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
 					"event": [
 						{
 							"listen": "test",
@@ -923,27 +1106,20 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/api/users/:userID",
+							"raw": "{{host}}/api/users",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"users",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": "{{userID1}}"
-								}
+								"users"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get user by attribute",
+					"name": "Update user",
 					"event": [
 						{
 							"listen": "test",
@@ -957,24 +1133,125 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Lisa\",\r\n}"
+							"raw": "{\r\n    \"firstName\" : \"Nemo\",\r\n    \"lastName\" : \"Fish\",\r\n    \"email\" : \"lisa@gmail.com\",\r\n    \"username\" : \"kitty\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{host}}/api/users",
+							"raw": "{{host}}/api/users/:email",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"users"
+								"users",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": "lisa@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update(partial) user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status code is 201', function(){\r",
+									"    pm.response.to.have.status(201);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\" : \"Jack\",\r\n    \"lastName\" : \"Snow\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/users/:email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "lisa@gmail.com",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": "lisa@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user by email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('status code is 201', function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/users/:email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": "lisa@gmail.com"
+								}
 							]
 						}
 					},
@@ -1010,138 +1287,6 @@
 							"path": [
 								"api",
 								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete user by id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test('status code is 201', function(){\r",
-									"    pm.response.to.have.status(200);\r",
-									"})"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/users/:userID",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"users",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": "{{userID2}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Put By id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test('status code is 201', function(){\r",
-									"    pm.response.to.have.status(201);\r",
-									"})"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\" : \"Nemo\",\r\n    \"lastName\" : \"Fish\",\r\n    \"email\" : \"nemo@gmail.com\",\r\n    \"username\" : \"fishy\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/api/users/:userID",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"users",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": "{{userID1}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Patch By id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test('status code is 201', function(){\r",
-									"    pm.response.to.have.status(201);\r",
-									"})"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\" : \"Jon\",\r\n    \"lastName\" : \"Snow\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/api/users/:userID",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"users",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": "{{userID1}}"
-								}
 							]
 						}
 					},
@@ -1380,6 +1525,379 @@
 								{
 									"key": "inviteeID",
 									"value": "{{inviteeID1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Group",
+			"item": [
+				{
+					"name": "Create a new Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"groupID1\", jsonData._id);\r",
+									"\r",
+									"pm.test('status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"\r",
+									"})\r",
+									"pm.test('Response should be JSON', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    //also checks if there is a body\r",
+									"    pm.response.to.not.be.error;\r",
+									"})\r",
+									"\r",
+									"pm.test('Correct JSON schema', function () {\r",
+									"    const schema = {\r",
+									"     \"properties\": {\r",
+									"            \"name\": { \"type\": \"string\" }\r",
+									"        }\r",
+									"\r",
+									"    }\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"\r",
+									"})\r",
+									"\r",
+									"pm.test('Json has correct data', function () {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an(\"object\");\r",
+									"    pm.expect(responseJson.name).to.be.a(\"string\");\r",
+									"\r",
+									"    //How do you assert time and id? \r",
+									"\r",
+									"    //pm.expect(responseJson.title).to.eql('Event');\r",
+									"    //pm.expect(responseJson.description).to.eql('description');\r",
+									"\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"group6\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/groups",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get group with userID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/groups?userID=WxdIoBuxYYZCxa0iF4Pz0xSuR2H2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"groups"
+							],
+							"query": [
+								{
+									"key": "userID",
+									"value": "WxdIoBuxYYZCxa0iF4Pz0xSuR2H2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get group with groupID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/groups/:groupID",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"groups",
+								":groupID"
+							],
+							"variable": [
+								{
+									"key": "groupID",
+									"value": "616c9d9a75be583c1b4a6de8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get group with reverse key",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/groups?page=0&limit=5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"groups"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "Send a message",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"username\": \"test1\",\n            \"content\": \"hello-world\",\n            \"timestamp\": \"2014-01-02T23:28:56.782Z\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/message/:groupID",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"message",
+								":groupID"
+							],
+							"variable": [
+								{
+									"key": "groupID",
+									"value": "{{groupID1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a message with groupID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/message/:groupID",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"message",
+								":groupID"
+							],
+							"variable": [
+								{
+									"key": "groupID",
+									"value": "61689d01a4d1b7163d91510d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send a message with Same GroupID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"username\": \"test2\",\n            \"content\": \"hello-there\",\n            \"timestamp\": \"2015-01-02T23:28:56.782Z\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/message/:groupID",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"message",
+								":groupID"
+							],
+							"variable": [
+								{
+									"key": "groupID",
+									"value": "{{groupID1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send a message with another GroupID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"username\": \"test2\",\n            \"content\": \"hello-there\",\n            \"timestamp\": \"2015-01-02T23:28:56.782Z\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/message/:groupID",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"message",
+								":groupID"
+							],
+							"variable": [
+								{
+									"key": "groupID",
+									"value": "2"
 								}
 							]
 						}

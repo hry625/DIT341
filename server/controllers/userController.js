@@ -22,7 +22,7 @@ router.post("/api/users", async function (req, res) {
       username,
     }).lean();
     if (ifExists) {
-      return res.json({
+      return res.status(403).json({
         status: "error",
         text: "user alredy registred",
       });
@@ -33,7 +33,7 @@ router.post("/api/users", async function (req, res) {
     //   return User + 1;
     // };
 
-    let newUser = new user({
+    let newUser = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -42,13 +42,13 @@ router.post("/api/users", async function (req, res) {
     });
     await newUser.save();
     console.log(newUser);
-    res.json({
+    res.status(201).json({
       status: "success",
       text: "user registred",
     });
   } catch (e) {
     console.log(e);
-    res.json({
+    res.status(500).json({
       status: "error",
       text: "iternal server error",
     });
@@ -114,7 +114,7 @@ router.put("/api/users/:email", function (req, res, next) {
       return next(err);
     }
     console.log(user)
-    res.status(200).json(user);
+    res.status(201).json(user);
   });
 });
 
@@ -122,11 +122,11 @@ router.put("/api/users/:email", function (req, res, next) {
 //edit partially user
 router.patch("/api/users/:email", function (req, res, next) {
   var email = req.params.email;
-  User.findOneAndUpdate(email, req.body, (err, user) => {
+  User.findOneAndUpdate({email:email}, req.body, (err, user) => {
     if (err) {
       return next(err);
     }
-    res.status(200).json(user);
+    res.status(201).json(user);
   });
 });
 

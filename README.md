@@ -84,3 +84,8 @@ Each user has exactly one calendar and can belong to one or multiple groups. Eac
 ## Teaser (MS3)
 
 ![Teaser](./images/teaser.png)
+
+## Credit 
+
+Special thanks to
+https://github.com/berksaribas/vuetify-chat 

@@ -137,7 +137,7 @@ export default {
           }
         ]
       }
-      // TODO: udpate to post instead.
+      // TODO: udpate to post instead. add currentuser to /groups/:groupID/groupMember also need to modify the backend as well
       Api.put('/groups', newGroup)
         .catch((error) => {
           if (error.response) {

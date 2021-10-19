@@ -57,27 +57,28 @@ export default {
   methods: {
     loadRecentChats(lastKey) {
       const that = this
-      Api.get('groups', { params: { page: 0, limit: 20 } }).catch((error) => {
-        if (error.response) {
-          alert(
-            'Oh no something went wrong when loading the chats, Status code ' + error.response.status
-          )
-        } else {
-          alert('Oops something went wrong when loading the chats')
-        }
-      }).then(function (
-        res
-      ) {
-        console.log(res)
-        const resData = res.data
-        for (const group in resData) {
-          const chat = resData[group]
-          chat.key = resData[group]._id
-          // chat.name = group.name
-          that.getUserCountForChat(chat)
-          that.loadedChats.unshift(chat)
-        }
-      })
+      Api.get('groups', { params: { page: 0, limit: 20 } })
+        .catch((error) => {
+          if (error.response) {
+            alert(
+              'Oh no something went wrong when loading the chats, Status code ' +
+                error.response.status
+            )
+          } else {
+            alert('Oops something went wrong when loading the chats')
+          }
+        })
+        .then(function (res) {
+          console.log(res)
+          const resData = res.data
+          for (const group in resData) {
+            const chat = resData[group]
+            chat.key = resData[group]._id
+            // chat.name = group.name
+            that.getUserCountForChat(chat)
+            that.loadedChats.unshift(chat)
+          }
+        })
       // firebase
       //   .database()
       //   .ref('chats')
@@ -136,25 +137,30 @@ export default {
           }
         ]
       }
-      Api.patch('/groups', newGroup).catch((error) => {
-        if (error.response) {
-          alert(
-            'Oh no something went wrong and couldnt enter group, Status code ' + error.response.status
-          )
-        } else {
-          alert('Oops something went wrong')
-        }
-      }).then(() => {
-        this.$router.push('/group/' + groupId)
-      }).catch((error) => {
-        if (error.response) {
-          alert(
-            'Oh no something went wrong, Status code ' + error.response.status
-          )
-        } else {
-          alert('Oops something went wrong')
-        }
-      })
+      // TODO: udpate to post instead.
+      Api.put('/groups', newGroup)
+        .catch((error) => {
+          if (error.response) {
+            alert(
+              'Oh no something went wrong and couldnt enter group, Status code ' +
+                error.response.status
+            )
+          } else {
+            alert('Oops something went wrong')
+          }
+        })
+        .then(() => {
+          this.$router.push('/group/' + groupId)
+        })
+        .catch((error) => {
+          if (error.response) {
+            alert(
+              'Oh no something went wrong, Status code ' + error.response.status
+            )
+          } else {
+            alert('Oops something went wrong')
+          }
+        })
       // const updates = {}
       // updates['/chat_members/' + chatId + '/users/' + this.user.id] = {
       //   timestamp: time

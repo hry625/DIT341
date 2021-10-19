@@ -49,7 +49,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="userIsAuthenticated" >
-        <v-btn text :key="SignOut" v-on:click="signOut">
+        <v-btn text v-on:click="signOut">
           <v-icon>mdi-logout</v-icon>
           <div class="hidden-xs-only">SignOut</div>
         </v-btn>

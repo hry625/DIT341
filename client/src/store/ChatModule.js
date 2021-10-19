@@ -16,7 +16,7 @@ const ChatModule = {
       const groupID = payload.groupID
       const url = '/message/' + groupID
       const message = {
-        user: payload.username,
+        username: payload.username,
         content: payload.content,
         timestamp: payload.date
       }

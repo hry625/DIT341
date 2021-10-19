@@ -34,6 +34,7 @@ import Message from './parts/Message.vue'
 import EmojiPicker from './parts/EmojiPicker.vue'
 import Chats from './parts/Chats.vue'
 import firebase from 'firebase/compat/app'
+import { Api } from '../../Api'
 export default {
   data() {
     return {
@@ -64,54 +65,101 @@ export default {
     },
     onNewMessageAdded() {
       const that = this
+      console.log(that.chatMessages)
       const onNewMessageAdded = function (snapshot, newMessage = true) {
-        const message = snapshot.val()
-        message.key = snapshot.key
+        var groupkey = snapshot.ref.parent.key
         /*eslint-disable */
         var urlPattern =
           /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
         /* eslint-enable */
-        message.content = message.content
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-        message.content = message.content.replace(
-          urlPattern,
-          "<a href='$1'>$1</a>"
-        )
-        if (!newMessage) {
-          that.chatMessages.unshift(that.processMessage(message))
-          that.scrollTo()
-        } else {
-          that.chatMessages.push(that.processMessage(message))
-          that.scrollToEnd()
-        }
+        var url = '/message/' + groupkey
+        Api.get(url).then(function (res) {
+          var msgs = []
+          msgs = res.data[0].messages
+
+          for (const index in msgs) {
+            const message = {}
+            message.key = msgs[index]._id
+            message.content = msgs[index].content
+            message.content = message.content
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;')
+            message.content = message.content.replace(
+              urlPattern,
+              "<a href='$1'>$1</a>"
+            )
+            message.user = msgs[index].username
+            message.timestamp = msgs[index].timestamp
+            if (!newMessage) {
+              that.chatMessages.push(that.processMessage(message))
+              that.scrollTo()
+            } else {
+              that.chatMessages.unshift(that.processMessage(message))
+              that.scrollToEnd()
+            }
+          }
+        })
+        // const onNewMessageAdded = function (snapshot, newMessage = true) {
+        //   const message = snapshot.val()
+        //   message.key = snapshot.key
+        //   /*eslint-disable */
+        //   var urlPattern =
+        //     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
+        //   /* eslint-enable */
+        //   message.content = message.content
+        //     .replace(/&/g, '&amp;')
+        //     .replace(/</g, '&lt;')
+        //     .replace(/>/g, '&gt;')
+        //     .replace(/"/g, '&quot;')
+        //     .replace(/'/g, '&#039;')
+        //   message.content = message.content.replace(
+        //     urlPattern,
+        //     "<a href='$1'>$1</a>"
+        //   )
+        //   if (!newMessage) {
+        //     that.chatMessages.unshift(that.processMessage(message))
+        //     that.scrollTo()
+        //   } else {
+        //     that.chatMessages.push(that.processMessage(message))
+        //     that.scrollToEnd()
+        //   }
       }
+      console.log(that.chatMessages)
+
       return onNewMessageAdded
     }
   },
   watch: {
     '$route.params.id'(newId, oldId) {
-      this.currentRef.off('child_added', this.onNewMessageAdded)
+      this.currentRef.off('value', this.onNewMessageAdded)
       this.loadChat()
     }
   },
   methods: {
     loadChat() {
+      this.chatMessages.pop()
       this.totalChatHeight = this.$refs.chatContainer.scrollHeight
       this.loading = false
       if (this.id !== undefined) {
         this.chatMessages = []
-        const chatID = this.id
+        const groupID = this.id
         this.currentRef = firebase
           .database()
-          .ref('messages')
-          .child(chatID)
-          .child('messages')
-          .limitToLast(20)
-        this.currentRef.on('child_added', this.onNewMessageAdded)
+          .ref('group')
+          .child(groupID)
+          .child('messageCount')
+        this.currentRef.on('value', this.onNewMessageAdded)
+        // const chatID = this.id
+        // this.currentRef = firebase
+        //   .database()
+        //   .ref('messages')
+        //   .child(chatID)
+        //   .child('messages')
+        //   .limitToLast(20)
+        // this.currentRef.on('child_added', this.onNewMessageAdded)
       }
     },
     onScroll() {
@@ -168,6 +216,8 @@ export default {
     },
     sendMessage() {
       if (this.content !== '') {
+        console.log(this.id)
+        console.log(this.username)
         this.$store.dispatch('sendMessage', {
           username: this.username,
           content: this.content,

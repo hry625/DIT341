@@ -108,10 +108,10 @@ const AuthModule = {
               }
               commit('setUser', newUser)
             })
-            .catch(error => {
-              commit('setLoading', false)
-              commit('setError', error)
-            })
+              .catch(error => {
+                commit('setLoading', false)
+                commit('setError', error)
+              })
             // firebase.database().ref('users').child(auth.user.uid).once('value', function (data) {
             //   commit('setLoading', false)
             //   const newUser = {

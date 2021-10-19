@@ -4,9 +4,9 @@
       <v-subheader>MY CHATS</v-subheader>
       <v-list-item
         avatar
-        v-for="(group, index) in chats"
+        v-for="group in chats"
         v-bind:key="group.name"
-        :to="/group/ + index"
+        :to="/group/ + group._id"
       >
         <v-list-item-content>
           <v-list-item-title v-html="group.name"></v-list-item-title>
@@ -26,6 +26,7 @@ export default {
   },
   computed: {
     chats() {
+      console.log(this.$store.getters.chats)
       return this.$store.getters.chats
     }
   }

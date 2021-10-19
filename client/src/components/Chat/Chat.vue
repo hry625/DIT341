@@ -34,6 +34,7 @@ import Message from './parts/Message.vue'
 import EmojiPicker from './parts/EmojiPicker.vue'
 import Chats from './parts/Chats.vue'
 import firebase from 'firebase/compat/app'
+import { Api } from '../../Api'
 export default {
   data() {
     return {
@@ -65,89 +66,140 @@ export default {
     onNewMessageAdded() {
       const that = this
       const onNewMessageAdded = function (snapshot, newMessage = true) {
-        const message = snapshot.val()
-        message.key = snapshot.key
+        var groupkey = snapshot.ref.parent.key
         /*eslint-disable */
         var urlPattern =
           /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
         /* eslint-enable */
-        message.content = message.content
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-        message.content = message.content.replace(
-          urlPattern,
-          "<a href='$1'>$1</a>"
-        )
-        if (!newMessage) {
-          that.chatMessages.unshift(that.processMessage(message))
-          that.scrollTo()
-        } else {
-          that.chatMessages.push(that.processMessage(message))
-          that.scrollToEnd()
-        }
+        var url = '/message/' + groupkey
+        Api.get(url)
+          .then(function (res) {
+            var msgs = []
+            msgs = res.data[0].messages
+            that.chatMessages = []
+            for (const index in msgs) {
+              const message = {}
+              message.key = msgs[index]._id
+              message.content = msgs[index].content
+              message.content = message.content
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+              message.content = message.content.replace(
+                urlPattern,
+                "<a href='$1'>$1</a>"
+              )
+              message.user = msgs[index].username
+              message.timestamp = msgs[index].timestamp
+              console.log('in the for loop')
+              if (!newMessage) {
+                that.chatMessages.push(that.processMessage(message))
+                that.scrollToEnd()
+              } else {
+                that.chatMessages.unshift(that.processMessage(message))
+                that.scrollTo()
+              }
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              alert(
+                'Oh no something went wrong, Status code ' +
+                  error.response.status
+              )
+            } else {
+              alert('Oops something went wrong')
+            }
+          })
+        // const onNewMessageAdded = function (snapshot, newMessage = true) {
+        //   const message = snapshot.val()
+        //   message.key = snapshot.key
+        //   /*eslint-disable */
+        //   var urlPattern =
+        //     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
+        //   /* eslint-enable */
+        //   message.content = message.content
+        //     .replace(/&/g, '&amp;')
+        //     .replace(/</g, '&lt;')
+        //     .replace(/>/g, '&gt;')
+        //     .replace(/"/g, '&quot;')
+        //     .replace(/'/g, '&#039;')
+        //   message.content = message.content.replace(
+        //     urlPattern,
+        //     "<a href='$1'>$1</a>"
+        //   )
+        //   if (!newMessage) {
+        //     that.chatMessages.unshift(that.processMessage(message))
+        //     that.scrollTo()
+        //   } else {
+        //     that.chatMessages.push(that.processMessage(message))
+        //     that.scrollToEnd()
+        //   }
       }
+      console.log('second')
+      console.log(that.chatMessages)
+
       return onNewMessageAdded
     }
   },
   watch: {
     '$route.params.id'(newId, oldId) {
-      this.currentRef.off('child_added', this.onNewMessageAdded)
+      this.currentRef.off('value', this.onNewMessageAdded)
       this.loadChat()
     }
   },
+  updat: {},
   methods: {
     loadChat() {
       this.totalChatHeight = this.$refs.chatContainer.scrollHeight
       this.loading = false
       if (this.id !== undefined) {
         this.chatMessages = []
-        const chatID = this.id
+        const groupID = this.id
         this.currentRef = firebase
           .database()
-          .ref('messages')
-          .child(chatID)
-          .child('messages')
-          .limitToLast(20)
-        this.currentRef.on('child_added', this.onNewMessageAdded)
+          .ref('group')
+          .child(groupID)
+          .child('messageCount')
+        this.currentRef.on('value', this.onNewMessageAdded)
       }
     },
     onScroll() {
-      const scrollValue = this.$refs.chatContainer.scrollTop
-      const that = this
-      if (scrollValue < 100 && !this.loading) {
-        this.totalChatHeight = this.$refs.chatContainer.scrollHeight
-        this.loading = true
-        const chatID = this.id
-        const currentTopMessage = this.chatMessages[0]
-        if (currentTopMessage === undefined) {
-          this.loading = false
-          return
-        }
-        firebase
-          .database()
-          .ref('messages')
-          .child(chatID)
-          .child('messages')
-          .orderByKey()
-          .endAt(currentTopMessage.key)
-          .limitToLast(20)
-          .once('value')
-          .then(function (snapshot) {
-            const tempArray = []
-            snapshot.forEach(function (item) {
-              tempArray.push(item)
-            })
-            if (tempArray[0].key === tempArray[1].key) return
-            tempArray.reverse()
-            tempArray.forEach(function (child) {
-              that.onNewMessageAdded(child, false)
-            })
-            that.loading = false
-          })
-      }
+      // const scrollValue = this.$refs.chatContainer.scrollTop
+      // const that = this
+      // if (scrollValue < 100 && !this.loading) {
+      //   this.totalChatHeight = this.$refs.chatContainer.scrollHeight
+      //   this.loading = true
+      //   const chatID = this.id
+      //   const currentTopMessage = this.chatMessages[0]
+      //   if (currentTopMessage === undefined) {
+      //     this.loading = false
+      //     return
+      //   }
+      // firebase
+      //   .database()
+      //   .ref('messages')
+      //   .child(chatID)
+      //   .child('messages')
+      //   .orderByKey()
+      //   .endAt(currentTopMessage.key)
+      //   .limitToLast(20)
+      //   .once('value')
+      //   .then(function (snapshot) {
+      //     const tempArray = []
+      //     snapshot.forEach(function (item) {
+      //       tempArray.push(item)
+      //     })
+      //     if (tempArray[0].key === tempArray[1].key) return
+      //     tempArray.reverse()
+      //     tempArray.forEach(function (child) {
+      //       // that.onNewMessageAdded(child, false)
+      //     })
+      //     that.loading = false
+      //   })
+      // }
     },
     processMessage(message) {
       /*eslint-disable */
@@ -168,6 +220,8 @@ export default {
     },
     sendMessage() {
       if (this.content !== '') {
+        console.log(this.id)
+        console.log(this.username)
         this.$store.dispatch('sendMessage', {
           username: this.username,
           content: this.content,
@@ -183,13 +237,17 @@ export default {
         container.scrollTop = container.scrollHeight
       })
     },
+    ste: function () {
+      var container = this.$el.querySelector('.chat-container')
+      container.scrollTop = container.scrollHeight
+    },
     scrollTo() {
-      this.$nextTick(() => {
-        const currentHeight = this.$refs.chatContainer.scrollHeight
-        const difference = currentHeight - this.totalChatHeight
-        const container = this.$el.querySelector('.chat-container')
-        container.scrollTop = difference
-      })
+      // this.$nextTick(() => {
+      //   const currentHeight = this.$refs.chatContainer.scrollHeight
+      //   const difference = currentHeight - this.totalChatHeight
+      //   const container = this.$el.querySelector('.chat-container')
+      //   container.scrollTop = difference
+      // })
     },
     addEmojiToMessage(emoji) {
       this.content += emoji.value

@@ -34,6 +34,8 @@
 
 <script>
 import firebase from 'firebase/compat/app'
+import { Api } from '../../Api'
+
 export default {
   data() {
     return {
@@ -55,19 +57,40 @@ export default {
   methods: {
     loadRecentChats(lastKey) {
       const that = this
-      firebase
-        .database()
-        .ref('chats')
-        .orderByKey()
-        .limitToLast(20)
-        .once('value', function (snapshot) {
-          snapshot.forEach(function (childSnapshot) {
-            const chat = childSnapshot.val()
-            chat.key = childSnapshot.key
-            that.getUserCountForChat(chat)
-            that.loadedChats.unshift(chat)
-          })
-        })
+      Api.get('groups', { params: { page: 0, limit: 20 } }).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong when loading the chats, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong when loading the chats')
+        }
+      }).then(function (
+        res
+      ) {
+        console.log(res)
+        const resData = res.data
+        for (const group in resData) {
+          const chat = resData[group]
+          chat.key = resData[group]._id
+          // chat.name = group.name
+          that.getUserCountForChat(chat)
+          that.loadedChats.unshift(chat)
+        }
+      })
+      // firebase
+      //   .database()
+      //   .ref('chats')
+      //   .orderByKey()
+      //   .limitToLast(20)
+      //   .once('value', function (snapshot) {
+      //     snapshot.forEach(function (childSnapshot) {
+      //       const chat = childSnapshot.val()
+      //       chat.key = childSnapshot.key
+      //       that.getUserCountForChat(chat)
+      //       that.loadedChats.unshift(chat)
+      //     })
+      //   })
     },
     loadRecentChatsByLastKey(lastKey) {
       const that = this
@@ -96,27 +119,57 @@ export default {
           that.loading = false
         })
     },
-    enterChat(chat) {
-      if (chat.isAlreadyJoined || chat.userCount == null) {
+    enterChat(group) {
+      if (group.isAlreadyJoined || group.userCount == null) {
         return
       }
-      const chatId = chat.key
+      console.log(group)
+      const groupId = group.key
       const time = new Date().valueOf()
-      const updates = {}
-      updates['/chat_members/' + chatId + '/users/' + this.user.id] = {
-        timestamp: time
+      const newGroup = {
+        name: group.name,
+        groupMember: [
+          {
+            username: this.$store.getters.user.username,
+            userID: this.$store.getters.user.id,
+            timestamp: time
+          }
+        ]
       }
-      updates['users/' + this.user.id + '/chats/' + chatId] = {
-        timestamp: time
-      }
+      Api.patch('/groups', newGroup).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong and couldnt enter group, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
+      }).then(() => {
+        this.$router.push('/group/' + groupId)
+      }).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong')
+        }
+      })
+      // const updates = {}
+      // updates['/chat_members/' + chatId + '/users/' + this.user.id] = {
+      //   timestamp: time
+      // }
+      // updates['users/' + this.user.id + '/chats/' + chatId] = {
+      //   timestamp: time
+      // }
       //   const that = this
-      firebase
-        .database()
-        .ref()
-        .update(updates)
-        .then(() => {
-          this.$router.push('/chat/' + chatId)
-        })
+      // firebase
+      //   .database()
+      //   .ref()
+      //   .update(updates)
+      //   .then(() => {
+      //     this.$router.push('/chat/' + chatId)
+      //   })
     },
     onScroll() {
       if (
@@ -131,19 +184,31 @@ export default {
     },
     getUserCountForChat(chat) {
       const that = this
-      firebase
-        .database()
-        .ref('chat_members')
-        .child(chat.key)
-        .child('users')
-        .once('value', function (snapshot) {
-          that.$set(chat, 'userCount', snapshot.numChildren())
-          snapshot.forEach((user) => {
-            if (user.key === that.user.id) {
-              that.$set(chat, 'isAlreadyJoined', true)
-            }
-          })
-        })
+      that.$set(chat, 'userCount', chat.groupMember.length)
+      chat.groupMember.forEach((user) => {
+        if (user.userID === this.$store.getters.user.id) {
+          that.$set(chat, 'isAlreadyJoined', true)
+        }
+      })
+      // Api.get('groups').then(function (res) {
+      //   console.log(chat)
+
+      //   that.$set(chat, 'userCount', res.groupMember.length)
+      // })
+
+      // firebase
+      //   .database()
+      //   .ref('chat_members')
+      //   .child(chat.key)
+      //   .child('users')
+      //   .once('value', function (snapshot) {
+      //     that.$set(chat, 'userCount', snapshot.numChildren())
+      //     snapshot.forEach((user) => {
+      //       if (user.key === that.user.id) {
+      //         that.$set(chat, 'isAlreadyJoined', true)
+      //       }
+      //     })
+      //   })
     }
   },
   created() {

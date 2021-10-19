@@ -54,7 +54,15 @@ export default {
           }
         ]
       }
-      Api.post('/groups', group)
+      Api.post('/groups', group).catch((error) => {
+        if (error.response) {
+          alert(
+            'Oh no something went wrong when creating group, Status code ' + error.response.status
+          )
+        } else {
+          alert('Oops something went wrong when creating group')
+        }
+      })
         .then((res) => {
           this.groupID = res.data._id
           console.log(res.data._id)

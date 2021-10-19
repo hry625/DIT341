@@ -33,4 +33,13 @@ router.post('/api/message/:groupID',function(req,res,next){
 
 })
 
+router.get('/api/message/:groupID',function(req,res,next){
+    Message.find({groupID: req.params.groupID}, function(err, message){
+        if (err){return next(err)}
+        console.log(message)
+        res.status(201).json(message)
+    })
+})
+
+
 module.exports = router;

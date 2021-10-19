@@ -7,13 +7,14 @@ const jwt = require("jsonwebtoken");
 
 router.post("/api/register", async function (req, res) {
   try {
-    let {
-      firstName,
-      lastName,
-      email,
-      username,
-      // password
-    } = req.body;
+    var username = req.body.username
+    // let {
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   username,
+    //   // password
+    // } = req.body;
 
     let ifExists = await User.findOne({
       username,
@@ -26,15 +27,15 @@ router.post("/api/register", async function (req, res) {
     }
 
 
-    let userCount = function (User) {
-      return User + 1;
-    };
+    // let userCount = function (User) {
+    //   return User + 1;
+    // };
 
     let newUser = new User({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      username: username,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      username: req.body.username,
       // password: password
     });
     await newUser.save();
@@ -375,9 +376,9 @@ router.get("/api/users", function (req, res, next) {
 });
 
 // find userEmail
-router.get('/api/users', function(req, res, next) {
-  var email = req.query.email;
-  User.find({email}, function(err, user) {
+router.get('/api/users/:email', function(req, res, next) {
+  var email = req.params.email;
+  User.findOne({email}, function(err, user) {
       if (err) { return next(err); }
       console.log(user)
       res.status(201).json(user);

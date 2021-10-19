@@ -39,7 +39,13 @@
                     class="rounded-0"
                     outlined
                   ></v-text-field>
-                  <v-btn v-on:click="Login()" class="rounded-0" color="#000000" x-large block dark
+                  <v-btn
+                    v-on:click="Login()"
+                    class="rounded-0"
+                    color="#000000"
+                    x-large
+                    block
+                    dark
                     >Login</v-btn
                   >
                   <v-card-actions class="text--secondary">
@@ -48,7 +54,10 @@
                       label="Remember me"
                     ></v-checkbox>
                     <v-spacer></v-spacer>
-                    No account? <router-link style="margin-right:30px" to="/register">Sign Up</router-link>
+                    No account?
+                    <router-link style="margin-right: 30px" to="/register"
+                      >Sign Up</router-link
+                    >
                     <!-- <a href="./Profile" class="pl-2" style="color: #000000">Sign Up</a> -->
                   </v-card-actions>
                 </v-form>
@@ -85,15 +94,20 @@ export default {
   methods: {
     Login() {
       Api.post('/auth', { password: this.password, email: this.email })
-        .then(response => {
+        .then((response) => {
           console.log(response.data)
           if (response.data.data.JWT) {
             localStorage.setItem('jwt', response.data.data.JWT)
             this.$router.push({ name: 'calendar' })
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.message = error
+          if (error.response) {
+            alert('Oh no failed to login, Status code ' + error.response.status)
+          } else {
+            alert('Oops something went wrong')
+          }
         })
     }
   }

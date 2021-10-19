@@ -50,7 +50,7 @@ const AuthModule = {
               lastName: payload.lastName,
               email: payload.email
             }
-            Api.post('/register', data)
+            Api.post('/users', data)
             firebase.database().ref('users').child(auth.user.uid).set({
               username: payload.username,
               firstName: payload.firstName,
@@ -139,6 +139,46 @@ const AuthModule = {
         // an error occurred
         console.log(error)
       })
+    },
+    editUser({ commit }, user) {
+      commit('setLoading', true)
+      Api({
+        method: 'PUT',
+        url: '/users/:email',
+        params: { email: user.email },
+        data: user
+      })
+        .then(res => {
+          // firebase.auth().onAuthStateChanged(user => {
+          // try {
+          //   const u = firebase.auth().currentUser
+
+          //   u.updateProfile({
+          //     email: user.email
+          //   })
+          // } catch (e) {}
+
+          // firebase.auth().onAuthStateChanged(u => {
+          //   if (u) {
+          //     // User logged in already or has just logged in.
+          //     console.log(u.uid)
+
+          //     u.updateProfile({ email: user.email })
+          //     // firebase.auth().updateUser(user.uid, user)
+
+          //     // u.updateProfile(user)
+          //   }
+          // })
+
+          // });
+          console.log(res.data)
+          commit('setLoading', false)
+          commit('setUser', res.data)
+        })
+        .catch(error => {
+          commit('setLoading', false)
+          commit('setError', error)
+        })
     }
   },
   getters: {

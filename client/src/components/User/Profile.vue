@@ -83,8 +83,8 @@
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                      <!-- <input v-model="email" /> -->
-                      <v-list-item-title>{{ email }}</v-list-item-title>
+                      <input v-model="email" />
+                      <!-- <v-list-item-title>{{ email }}</v-list-item-title> -->
                     </v-list-item-content>
 
                     <!-- <v-list-item-icon>
@@ -194,8 +194,8 @@ export default {
       const user = {
         firstName: this.firstName,
         lastName: this.lastName,
-        username: this.username
-        // email: this.email
+        username: this.username,
+        email: this.email
       }
       this.$store.dispatch('editUser', user)
     }

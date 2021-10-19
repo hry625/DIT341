@@ -104,17 +104,19 @@ router.delete("/api/users", function (req, res, next) {
 });
 
 
+
 //edit user 
 router.put("/api/users/:email", function (req, res, next) {
-  var email = req.params.email;
-  // console.log(req.body)
-  user.findOneAndUpdate(email, req.body, (err, user) => {
+   const email = req.params.email;
+   console.log(email)
+  user.findOneAndUpdate({email: email}, req.body, (err, user) => {
     if (err) {
       return next(err);
     }
     res.status(200).json(user);
   });
 });
+
 
 //edit partially user
 router.patch("/api/users/:email", function (req, res, next) {

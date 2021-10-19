@@ -22,7 +22,7 @@ const AuthModule = {
             myUserRef.onDisconnect().remove()
             // set user's online status
             const presenceObject = {
-              username: payload.username,
+              username: payload ? payload.username : 'not user',
               status: 'online'
             }
             myUserRef.set(presenceObject)
@@ -149,28 +149,6 @@ const AuthModule = {
         data: user
       })
         .then(res => {
-          // firebase.auth().onAuthStateChanged(user => {
-          // try {
-          //   const u = firebase.auth().currentUser
-
-          //   u.updateProfile({
-          //     email: user.email
-          //   })
-          // } catch (e) {}
-
-          // firebase.auth().onAuthStateChanged(u => {
-          //   if (u) {
-          //     // User logged in already or has just logged in.
-          //     console.log(u.uid)
-
-          //     u.updateProfile({ email: user.email })
-          //     // firebase.auth().updateUser(user.uid, user)
-
-          //     // u.updateProfile(user)
-          //   }
-          // })
-
-          // });
           console.log(res.data)
           commit('setLoading', false)
           commit('setUser', res.data)

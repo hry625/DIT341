@@ -65,7 +65,6 @@ export default {
     },
     onNewMessageAdded() {
       const that = this
-      console.log(that.chatMessages)
       const onNewMessageAdded = function (snapshot, newMessage = true) {
         var groupkey = snapshot.ref.parent.key
         /*eslint-disable */
@@ -76,7 +75,7 @@ export default {
         Api.get(url).then(function (res) {
           var msgs = []
           msgs = res.data[0].messages
-
+          that.chatMessages = []
           for (const index in msgs) {
             const message = {}
             message.key = msgs[index]._id
@@ -93,12 +92,13 @@ export default {
             )
             message.user = msgs[index].username
             message.timestamp = msgs[index].timestamp
+            console.log('in the for loop')
             if (!newMessage) {
               that.chatMessages.push(that.processMessage(message))
-              that.scrollTo()
+              that.scrollToEnd()
             } else {
               that.chatMessages.unshift(that.processMessage(message))
-              that.scrollToEnd()
+              that.scrollTo()
             }
           }
         })
@@ -127,6 +127,7 @@ export default {
         //     that.scrollToEnd()
         //   }
       }
+      console.log('second')
       console.log(that.chatMessages)
 
       return onNewMessageAdded
@@ -138,9 +139,9 @@ export default {
       this.loadChat()
     }
   },
+  updat: {},
   methods: {
     loadChat() {
-      this.chatMessages.pop()
       this.totalChatHeight = this.$refs.chatContainer.scrollHeight
       this.loading = false
       if (this.id !== undefined) {
@@ -152,50 +153,42 @@ export default {
           .child(groupID)
           .child('messageCount')
         this.currentRef.on('value', this.onNewMessageAdded)
-        // const chatID = this.id
-        // this.currentRef = firebase
-        //   .database()
-        //   .ref('messages')
-        //   .child(chatID)
-        //   .child('messages')
-        //   .limitToLast(20)
-        // this.currentRef.on('child_added', this.onNewMessageAdded)
       }
     },
     onScroll() {
-      const scrollValue = this.$refs.chatContainer.scrollTop
-      const that = this
-      if (scrollValue < 100 && !this.loading) {
-        this.totalChatHeight = this.$refs.chatContainer.scrollHeight
-        this.loading = true
-        const chatID = this.id
-        const currentTopMessage = this.chatMessages[0]
-        if (currentTopMessage === undefined) {
-          this.loading = false
-          return
-        }
-        firebase
-          .database()
-          .ref('messages')
-          .child(chatID)
-          .child('messages')
-          .orderByKey()
-          .endAt(currentTopMessage.key)
-          .limitToLast(20)
-          .once('value')
-          .then(function (snapshot) {
-            const tempArray = []
-            snapshot.forEach(function (item) {
-              tempArray.push(item)
-            })
-            if (tempArray[0].key === tempArray[1].key) return
-            tempArray.reverse()
-            tempArray.forEach(function (child) {
-              that.onNewMessageAdded(child, false)
-            })
-            that.loading = false
-          })
-      }
+      // const scrollValue = this.$refs.chatContainer.scrollTop
+      // const that = this
+      // if (scrollValue < 100 && !this.loading) {
+      //   this.totalChatHeight = this.$refs.chatContainer.scrollHeight
+      //   this.loading = true
+      //   const chatID = this.id
+      //   const currentTopMessage = this.chatMessages[0]
+      //   if (currentTopMessage === undefined) {
+      //     this.loading = false
+      //     return
+      //   }
+      // firebase
+      //   .database()
+      //   .ref('messages')
+      //   .child(chatID)
+      //   .child('messages')
+      //   .orderByKey()
+      //   .endAt(currentTopMessage.key)
+      //   .limitToLast(20)
+      //   .once('value')
+      //   .then(function (snapshot) {
+      //     const tempArray = []
+      //     snapshot.forEach(function (item) {
+      //       tempArray.push(item)
+      //     })
+      //     if (tempArray[0].key === tempArray[1].key) return
+      //     tempArray.reverse()
+      //     tempArray.forEach(function (child) {
+      //       // that.onNewMessageAdded(child, false)
+      //     })
+      //     that.loading = false
+      //   })
+      // }
     },
     processMessage(message) {
       /*eslint-disable */
@@ -233,13 +226,17 @@ export default {
         container.scrollTop = container.scrollHeight
       })
     },
+    ste: function () {
+      var container = this.$el.querySelector('.chat-container')
+      container.scrollTop = container.scrollHeight
+    },
     scrollTo() {
-      this.$nextTick(() => {
-        const currentHeight = this.$refs.chatContainer.scrollHeight
-        const difference = currentHeight - this.totalChatHeight
-        const container = this.$el.querySelector('.chat-container')
-        container.scrollTop = difference
-      })
+      // this.$nextTick(() => {
+      //   const currentHeight = this.$refs.chatContainer.scrollHeight
+      //   const difference = currentHeight - this.totalChatHeight
+      //   const container = this.$el.querySelector('.chat-container')
+      //   container.scrollTop = difference
+      // })
     },
     addEmojiToMessage(emoji) {
       this.content += emoji.value

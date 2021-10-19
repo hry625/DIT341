@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { Api } from '@/Api'
+// import { Api } from '@/Api'
 export default {
   data: () => ({
     users: [],
@@ -52,25 +52,7 @@ export default {
   methods: {
     getUsers() {
       // TODO: change to get group member
-      var groupID = this.$store.getters.groupID
-      var url = '/groups/' + groupID
-      Api.get(url)
-        .then((response) => {
-          console.log(response.data)
-          var membersList = response.data.groupMember
-          for (const index in membersList) {
-            this.users.push(membersList[index].username)
-          }
-          //   this.users = response.data
-        })
-        .catch((error) => {
-          this.users = []
-          console.log(error)
-          //   TODO: display some error message instead of logging to console
-        })
-        .then(() => {
-          console.log(this.users)
-        })
+      this.users = this.$store.getters.currentGroupUser
     },
     toggle() {
       this.$nextTick(() => {

@@ -249,6 +249,7 @@
 <script>
 import InviteesPicker from './InviteePicker.vue'
 import { Api } from '@/Api'
+import qs from 'qs'
 export default {
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
@@ -319,7 +320,12 @@ export default {
   },
   methods: {
     async getEvents() {
-      Api.get('/events')
+      Api.get('/events', {
+        params: { usernames: this.$store.getters.currentGroupUser },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { indices: false })
+        }
+      })
         .then((response) => {
           console.log('response')
           console.log(response.data)

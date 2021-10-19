@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var user = require("../models/user");
+var User = require("../models/user");
 var authRequiredMiddleware = require("../middlewares/authRequired");
 let calendarEventSchema = require("../models/calendarEvent");
 const jwt = require("jsonwebtoken");
@@ -18,7 +18,7 @@ router.post("/api/users", async function (req, res) {
     //   // password
     // } = req.body;
 
-    let ifExists = await user.findOne({
+    let ifExists = await User.findOne({
       username,
     }).lean();
     if (ifExists) {
@@ -57,7 +57,7 @@ router.post("/api/users", async function (req, res) {
 
 // find all users
 router.get("/api/users", function (req, res, next) {
-  user.find(function (err, user) {
+  User.find(function (err, user) {
     if (err) {
       return next(err);
     }
@@ -67,23 +67,23 @@ router.get("/api/users", function (req, res, next) {
 });
 
 // find userEmail
-router.get("/api/user/:email", function (req, res, next) {
-  var {email} = req.params;
-  user.find({ email }, function (err, user) {
-    if (err) {
-      return next(err);
-    }
-    console.log(user);
-    res.status(201).json(user);
-  });
-});
+// router.get("/api/users/:email", function (req, res, next) {
+//   var {email} = req.params;
+//   user.find({ email }, function (err, user) {
+//     if (err) {
+//       return next(err);
+//     }
+//     console.log(user);
+//     res.status(201).json(user);
+//   });
+// });
 
 //delete user by email
 router.delete("/api/users/:email", function (req, res, next) {
   const email = req.params.email;
   console.log(email);
 
-  user.findOneAndDelete({email: email}, function (err, user) {
+  User.findOneAndDelete({email: email}, function (err, user) {
     if (err) {
       return next(err);
     }
@@ -95,7 +95,7 @@ router.delete("/api/users/:email", function (req, res, next) {
 
 //Delete all users
 router.delete("/api/users", function (req, res, next) {
-  user.remove({}, function (err, user) {
+  User.remove({}, function (err, user) {
     if (err) {
       return next(err);
     }
@@ -108,7 +108,7 @@ router.delete("/api/users", function (req, res, next) {
 router.put("/api/users/:email", function (req, res, next) {
   const email = req.params.email;
   // console.log(req.body)
-  user.findOneAndUpdate(email, req.body, (err, user) => {
+  User.findOneAndUpdate(email, req.body, (err, user) => {
     if (err) {
       return next(err);
     }
@@ -119,7 +119,7 @@ router.put("/api/users/:email", function (req, res, next) {
 //edit partially user
 router.patch("/api/users/:email", function (req, res, next) {
   var email = req.params.email;
-  user.findOneAndUpdate(email, req.body, (err, user) => {
+  User.findOneAndUpdate(email, req.body, (err, user) => {
     if (err) {
       return next(err);
     }

@@ -55,6 +55,7 @@ export default {
   mounted() {
     this.loadChat()
     this.$store.commit('setGroupID', this.id)
+    this.$store.dispatch('loadGroupUser')
     this.$store.dispatch('loadOnlineUsers')
   },
   components: {

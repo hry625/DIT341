@@ -12,6 +12,16 @@ router.post('/api/events', function(req, res, next) {
     })
 });
 
+
+router.get('/api/events',function(req,res,next){
+    // var usernames = req.query;
+    console.log(req.query.usernames)
+    CalendarEvent.find( { 'invitees.name' : { $in: req.query.usernames } },function(err, calendarEvent){
+        if (err) { return next(err);}
+        res.status(201).json(calendarEvent)
+    })
+})
+
 //Find all events
 router.get('/api/events', function(req, res, next) {
     CalendarEvent.find( function(err, calendarEvent) {
@@ -64,6 +74,8 @@ router.get('/api/events/:eventID', function(req, res, next) {
         res.status(201).json(calendarEvent);
     })
 })
+
+
 
 //Delete event by id
 router.delete('/api/events/:eventID', function(req, res, next) {

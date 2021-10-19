@@ -13,23 +13,28 @@ const AuthModule = {
       const userListRef = firebase.database().ref('presence')
       const myUserRef = userListRef.push()
 
-      firebase.database().ref('.info/connected')
-        .on(
-          'value', function (snap) {
-            if (snap.val()) {
-              // if we lose network then remove this user from the list
-              myUserRef.onDisconnect()
-                .remove()
-              // set user's online status
-              const presenceObject = { username: payload.username, status: 'online' }
-              myUserRef.set(presenceObject)
-            } else {
-              // client has lost network
-              const presenceObject = { username: payload.username, status: 'offline' }
-              myUserRef.set(presenceObject)
+      firebase
+        .database()
+        .ref('.info/connected')
+        .on('value', function (snap) {
+          if (snap.val()) {
+            // if we lose network then remove this user from the list
+            myUserRef.onDisconnect().remove()
+            // set user's online status
+            const presenceObject = {
+              username: payload.username,
+              status: 'online'
             }
+            myUserRef.set(presenceObject)
+          } else {
+            // client has lost network
+            const presenceObject = {
+              username: payload.username,
+              status: 'offline'
+            }
+            myUserRef.set(presenceObject)
           }
-        )
+        })
     }
   },
   actions: {
@@ -102,7 +107,8 @@ const AuthModule = {
                 username: res.data.username
               }
               commit('setUser', newUser)
-            }).catch(error => {
+            })
+            .catch(error => {
               commit('setLoading', false)
               commit('setError', error)
             })

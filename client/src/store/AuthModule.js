@@ -45,7 +45,7 @@ const AuthModule = {
         .auth()
         .createUserWithEmailAndPassword(payload.email, payload.password)
         .then(auth => {
-          Api.post('/register', payload)
+          Api.post('/users', payload)
           firebase
             .database()
             .ref('users')

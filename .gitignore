@@ -173,5 +173,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-/server/config/*.json
+server/config
 # End of https://www.gitignore.io/api/node,vuejs,visualstudiocode,linux,macos,windows
